@@ -19,21 +19,6 @@ namespace jobsite.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("JobPostKeyword", b =>
-                {
-                    b.Property<int>("JobPostsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("KeywordsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("JobPostsId", "KeywordsId");
-
-                    b.HasIndex("KeywordsId");
-
-                    b.ToTable("JobPostKeyword");
-                });
-
             modelBuilder.Entity("jobsite.Models.Admin", b =>
                 {
                     b.Property<int>("Id")
@@ -69,9 +54,6 @@ namespace jobsite.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CandidateId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Content")
                         .IsRequired()
                         .HasMaxLength(8388608)
@@ -88,8 +70,6 @@ namespace jobsite.Migrations
                         .HasColumnType("nvarchar(80)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CandidateId");
 
                     b.ToTable("CV");
                 });
@@ -108,6 +88,9 @@ namespace jobsite.Migrations
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("CVId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -128,6 +111,8 @@ namespace jobsite.Migrations
                         .HasColumnType("nvarchar(80)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CVId");
 
                     b.ToTable("Candidate");
                 });
@@ -197,7 +182,7 @@ namespace jobsite.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DeptId")
+                    b.Property<int?>("DeptId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -235,38 +220,28 @@ namespace jobsite.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("JobPostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("JobPostId");
 
                     b.ToTable("Keyword");
                 });
 
-            modelBuilder.Entity("JobPostKeyword", b =>
+            modelBuilder.Entity("jobsite.Models.Candidate", b =>
                 {
-                    b.HasOne("jobsite.Models.JobPost", null)
+                    b.HasOne("jobsite.Models.CV", "CV")
                         .WithMany()
-                        .HasForeignKey("JobPostsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CVId");
 
-                    b.HasOne("jobsite.Models.Keyword", null)
-                        .WithMany()
-                        .HasForeignKey("KeywordsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("jobsite.Models.CV", b =>
-                {
-                    b.HasOne("jobsite.Models.Candidate", "Candidate")
-                        .WithMany("CVs")
-                        .HasForeignKey("CandidateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Candidate");
+                    b.Navigation("CV");
                 });
 
             modelBuilder.Entity("jobsite.Models.JobApplication", b =>
@@ -300,11 +275,20 @@ namespace jobsite.Migrations
                 {
                     b.HasOne("jobsite.Models.Department", "Department")
                         .WithMany("JobPosts")
-                        .HasForeignKey("DeptId")
+                        .HasForeignKey("DeptId");
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("jobsite.Models.Keyword", b =>
+                {
+                    b.HasOne("jobsite.Models.JobPost", "JobPost")
+                        .WithMany("Keywords")
+                        .HasForeignKey("JobPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("JobPost");
                 });
 
             modelBuilder.Entity("jobsite.Models.CV", b =>
@@ -314,8 +298,6 @@ namespace jobsite.Migrations
 
             modelBuilder.Entity("jobsite.Models.Candidate", b =>
                 {
-                    b.Navigation("CVs");
-
                     b.Navigation("JobApplications");
                 });
 
@@ -327,6 +309,8 @@ namespace jobsite.Migrations
             modelBuilder.Entity("jobsite.Models.JobPost", b =>
                 {
                     b.Navigation("Applications");
+
+                    b.Navigation("Keywords");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,7 +2,7 @@
 {
     public enum AppStatus
     {
-        Submited,Viewed,Accepted,Rejected
+        AppReceived,Underconsideration,TechInterview,HRInterview,Accepted,NotSelected
     }
 
 

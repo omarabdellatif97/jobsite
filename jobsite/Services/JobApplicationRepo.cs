@@ -59,10 +59,6 @@ namespace jobsite.Services
 
         }
 
-
-
-
-
         #region dispose pattern
         private bool disposedValue;
 
@@ -98,6 +94,7 @@ namespace jobsite.Services
         }
         #endregion
 
+        // next
 
     }
 

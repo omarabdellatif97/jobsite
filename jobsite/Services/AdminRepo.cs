@@ -58,10 +58,6 @@ namespace jobsite.Services
 
         }
 
-
-
-
-
         #region dispose pattern
         private bool disposedValue;
 
@@ -96,6 +92,10 @@ namespace jobsite.Services
             GC.SuppressFinalize(this);
         }
         #endregion
+
+        // next
+
+
 
         
     }

@@ -92,10 +92,20 @@ namespace jobsite.Services
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+
         #endregion
 
+        public IEnumable<CV> GetCVs(int id)
+        {
+            throw new NotImplementedException();
+        }
 
-        
+        public IEnumable<CV> GetJobApplications(int id)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
 

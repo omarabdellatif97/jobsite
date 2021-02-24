@@ -3,72 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace jobsite.Migrations
 {
-    public partial class AddEntities : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Candidates",
-                table: "Candidates");
-
-            migrationBuilder.RenameTable(
-                name: "Candidates",
-                newName: "Candidate");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Candidate",
-                type: "nvarchar(80)",
-                maxLength: 80,
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "nvarchar(max)",
-                oldNullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Address",
-                table: "Candidate",
-                type: "nvarchar(150)",
-                maxLength: 150,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "BirthDate",
-                table: "Candidate",
-                type: "datetime2",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
-
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Candidate",
-                type: "nvarchar(80)",
-                maxLength: 80,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<int>(
-                name: "Gender",
-                table: "Candidate",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Password",
-                table: "Candidate",
-                type: "nvarchar(80)",
-                maxLength: 80,
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Candidate",
-                table: "Candidate",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "Admin",
                 columns: table => new
@@ -93,18 +31,11 @@ namespace jobsite.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     Content = table.Column<byte[]>(type: "varbinary(max)", maxLength: 8388608, nullable: false),
-                    Extension = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CandidateId = table.Column<int>(type: "int", nullable: false)
+                    Extension = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CV", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CV_Candidate_CandidateId",
-                        column: x => x.CandidateId,
-                        principalTable: "Candidate",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,16 +53,28 @@ namespace jobsite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Keyword",
+                name: "Candidate",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    CVId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Keyword", x => x.Id);
+                    table.PrimaryKey("PK_Candidate", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Candidate_CV_CVId",
+                        column: x => x.CVId,
+                        principalTable: "CV",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,7 +88,7 @@ namespace jobsite.Migrations
                     Location = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
                     PostDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    DeptId = table.Column<int>(type: "int", nullable: false)
+                    DeptId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -155,7 +98,7 @@ namespace jobsite.Migrations
                         column: x => x.DeptId,
                         principalTable: "Department",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -169,7 +112,7 @@ namespace jobsite.Migrations
                     AppStatus = table.Column<int>(type: "int", nullable: false),
                     JobPostId = table.Column<int>(type: "int", nullable: false),
                     CandidateId = table.Column<int>(type: "int", nullable: false),
-                    CVId = table.Column<int>(type: "int", nullable: false)//update
+                    CVId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,7 +128,7 @@ namespace jobsite.Migrations
                         column: x => x.CVId,
                         principalTable: "CV",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);//update
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_JobApplication_JobPost_JobPostId",
                         column: x => x.JobPostId,
@@ -195,33 +138,29 @@ namespace jobsite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobPostKeyword",
+                name: "Keyword",
                 columns: table => new
                 {
-                    JobPostsId = table.Column<int>(type: "int", nullable: false),
-                    KeywordsId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    JobPostId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_JobPostKeyword", x => new { x.JobPostsId, x.KeywordsId });
+                    table.PrimaryKey("PK_Keyword", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JobPostKeyword_JobPost_JobPostsId",
-                        column: x => x.JobPostsId,
+                        name: "FK_Keyword_JobPost_JobPostId",
+                        column: x => x.JobPostId,
                         principalTable: "JobPost",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JobPostKeyword_Keyword_KeywordsId",
-                        column: x => x.KeywordsId,
-                        principalTable: "Keyword",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CV_CandidateId",
-                table: "CV",
-                column: "CandidateId");
+                name: "IX_Candidate_CVId",
+                table: "Candidate",
+                column: "CVId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobApplication_CandidateId",
@@ -244,9 +183,9 @@ namespace jobsite.Migrations
                 column: "DeptId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JobPostKeyword_KeywordsId",
-                table: "JobPostKeyword",
-                column: "KeywordsId");
+                name: "IX_Keyword_JobPostId",
+                table: "Keyword",
+                column: "JobPostId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -258,61 +197,19 @@ namespace jobsite.Migrations
                 name: "JobApplication");
 
             migrationBuilder.DropTable(
-                name: "JobPostKeyword");
+                name: "Keyword");
 
             migrationBuilder.DropTable(
-                name: "CV");
+                name: "Candidate");
 
             migrationBuilder.DropTable(
                 name: "JobPost");
 
             migrationBuilder.DropTable(
-                name: "Keyword");
+                name: "CV");
 
             migrationBuilder.DropTable(
                 name: "Department");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Candidate",
-                table: "Candidate");
-
-            migrationBuilder.DropColumn(
-                name: "Address",
-                table: "Candidate");
-
-            migrationBuilder.DropColumn(
-                name: "BirthDate",
-                table: "Candidate");
-
-            migrationBuilder.DropColumn(
-                name: "Email",
-                table: "Candidate");
-
-            migrationBuilder.DropColumn(
-                name: "Gender",
-                table: "Candidate");
-
-            migrationBuilder.DropColumn(
-                name: "Password",
-                table: "Candidate");
-
-            migrationBuilder.RenameTable(
-                name: "Candidate",
-                newName: "Candidates");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Candidates",
-                type: "nvarchar(max)",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(80)",
-                oldMaxLength: 80);
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Candidates",
-                table: "Candidates",
-                column: "Id");
         }
     }
 }

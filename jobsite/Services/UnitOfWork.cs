@@ -96,10 +96,6 @@ namespace jobsite.Services
             return context.SaveChangesAsync();
         }
 
-
-
-
-
         #region dispose pattern
 
         private bool disposedValue;
@@ -141,6 +137,8 @@ namespace jobsite.Services
         //private readonly Lazy<ICVRepo> cvs = new Lazy<ICVRepo>(()=> new CVRepo(context));
 
         #endregion
+
+        // next
 
     }
 }

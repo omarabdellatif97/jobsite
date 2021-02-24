@@ -1,4 +1,5 @@
 ﻿using jobsite.Models;
+using jobsite.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,10 +13,12 @@ namespace jobsite.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork unit;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,IUnitOfWork unit)
         {
             _logger = logger;
+            this.unit = unit;
         }
 
         public IActionResult Index()

@@ -32,8 +32,12 @@ namespace jobsite.Models
         [Required]
         public JobPostStatus Status { get; set; }
 
+        [MaxLength(400)]
+        [NotMapped]
+        public string KeywordsText { get; set; }
 
-        public int DeptId { get; set; }
+
+        public int? DeptId { get; set; }
 
         [ForeignKey("DeptId")]
         public virtual Department Department { get; set; }

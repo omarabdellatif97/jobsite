@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -44,9 +45,14 @@ namespace jobsite.Models
 
 
         public virtual ICollection<JobApplication> JobApplications { get; set; } = new HashSet<JobApplication>();
-        
-        public virtual ICollection<CV> CVs { get; set; } = new HashSet<CV>();
 
+        //public virtual ICollection<CV> CVs { get; set; } = new HashSet<CV>();
+
+
+        public int? CVId { get; set; }
+
+        [ForeignKey("CVId")]
+        public virtual CV CV { get; set; }
 
 
     }

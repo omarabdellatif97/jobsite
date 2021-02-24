@@ -28,13 +28,10 @@ namespace jobsite.Models
 
         public int CandidateId { get; set; }
 
-
-
         public int CVId { get; set; }
 
         [ForeignKey("CVId")]
         public virtual CV CV { get; set; }
-
 
         [ForeignKey("JobPostId")]
         public virtual JobPost JobPost { get; set; }

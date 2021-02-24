@@ -8,7 +8,11 @@ namespace jobsite.Models
 {
     public class JobContext: DbContext
     {
-        public JobContext(DbContextOptions dbContextOptions) : base(dbContextOptions) { }
+        public JobContext(DbContextOptions dbContextOptions) : base(dbContextOptions) 
+        {
+            
+        }
+     
         public DbSet<Candidate> Candidates { get; set; }
         public DbSet<JobPost> JobPosts { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
