@@ -1,4 +1,5 @@
 using jobsite.Models;
+using jobsite.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,10 @@ namespace jobsite
         {
             services.AddControllersWithViews();
             services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
+
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

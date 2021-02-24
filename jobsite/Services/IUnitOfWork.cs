@@ -5,10 +5,19 @@ using System.Threading.Tasks;
 
 namespace jobsite.Services
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        // repos
 
+        public ICandidateRepo Candidates { get; }
+        public ICVRepo CV { get; }
+        public IJobPostRepo JobPosts { get; }
+        public IJobApplicationRepo JobApplications { get; }
+        public IDepartmentRepo Departments { get; }
+        public IAdminRepo Admins { get; }
         void Save();
+        Task<int> SaveAsync();
+
+
     }
+
 }
