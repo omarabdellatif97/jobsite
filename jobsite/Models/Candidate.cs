@@ -44,6 +44,7 @@ namespace jobsite.Models
         public string Password { get; set; }
 
 
+
         public virtual ICollection<JobApplication> JobApplications { get; set; } = new HashSet<JobApplication>();
         
         
@@ -56,40 +57,6 @@ namespace jobsite.Models
 
         [ForeignKey("CVId")]
         public virtual CV CV { get; set; }
-
-
-    }
-
-
-    [Table("Education")]
-    public class Education
-    {
-        [Key]
-        public int Id { get; set; }
-
-        [MaxLength(80, ErrorMessage = "max length is 80 character")]
-        [Required]
-        public string School { get; set; }
-
-        [MaxLength(80, ErrorMessage = "max length is 80 character")]
-        public string Degree { get; set; }
-
-        [MaxLength(80, ErrorMessage = "max length is 80 character")]
-        public string FieldOfStudy { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime EndDate { get; set; }
-
-        [MaxLength(80, ErrorMessage = "max length is 80 character")]
-        public string Grade { get; set; }
-
-        [MaxLength(255, ErrorMessage = "max length is 255 character")]
-        public string Description { get; set; }
-
-
 
 
     }
