@@ -1,4 +1,5 @@
-﻿using System;
+﻿using jobsite.Annotations;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,12 +14,14 @@ namespace jobsite.Models
 
         [Required]
         [DataType(DataType.Date)]
+        [CurrentDate(ErrorMessage = "Date must be after or equal to current date")]
         public DateTime AppDate { get; set; }
 
 
         [Required]
         [DataType(DataType.Date)]
-        public DateTime Probation{ get; set; }
+        [CurrentDate(ErrorMessage = "Date must be after or equal to current date")]
+        public DateTime PrefDateToJoin{ get; set; }
 
         [Required]
         public AppStatus AppStatus { get; set; }
