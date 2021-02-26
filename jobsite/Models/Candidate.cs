@@ -45,6 +45,9 @@ namespace jobsite.Models
 
 
         public virtual ICollection<JobApplication> JobApplications { get; set; } = new HashSet<JobApplication>();
+        
+        
+        public virtual ICollection<Education> Educations { get; set; } = new HashSet<Education>();
 
         //public virtual ICollection<CV> CVs { get; set; } = new HashSet<CV>();
 
@@ -65,6 +68,7 @@ namespace jobsite.Models
         public int Id { get; set; }
 
         [MaxLength(80, ErrorMessage = "max length is 80 character")]
+        [Required]
         public string School { get; set; }
 
         [MaxLength(80, ErrorMessage = "max length is 80 character")]
