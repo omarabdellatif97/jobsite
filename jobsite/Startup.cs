@@ -71,13 +71,12 @@ namespace jobsite
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
+                    name: "MyArea",
+                    pattern: "{area:exists}/{controller}/{action=Index}/{id?}");
 
                 endpoints.MapControllerRoute(
-                     name: "areas",
-                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                   );
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
