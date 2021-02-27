@@ -48,7 +48,8 @@ namespace jobsite.Areas.Admin
         // GET: Admin/JobPosts/Create
         public IActionResult Create()
         {
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description");
+            //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name");
+            ViewBag.DeptId = new SelectList(_context.Departments, "Id", "Name");
             return View();
         }
 
@@ -57,7 +58,7 @@ namespace jobsite.Areas.Admin
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Location,PostDate,Status,DeptId")] JobPost jobPost)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +78,7 @@ namespace jobsite.Areas.Admin
                 return NotFound();
             }
 
-            var jobPost = await _context.JobPosts.FindAsync(id);
+            var jobPost = await _context.JobPosts.Include(j=> j.Keywords).FirstOrDefaultAsync(j=> j.Id == id);
             if (jobPost == null)
             {
                 return NotFound();
@@ -91,7 +92,7 @@ namespace jobsite.Areas.Admin
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Location,PostDate,Status,DeptId")] JobPost jobPost)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
         {
             if (id != jobPost.Id)
             {

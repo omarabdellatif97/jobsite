@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,7 @@ namespace jobsite.Models
     [Table("JobPost")]
     public class JobPost : EntityBase
     {
+
         [Key]
         public int Id { get; set; }
 
@@ -34,7 +36,20 @@ namespace jobsite.Models
 
         [MaxLength(400)]
         [NotMapped]
-        public string KeywordsText { get; set; }
+        public string KeywordsText
+        {
+            get { return string.Join($"{Environment.NewLine}#",this.Keywords.Select(k=> k.Value)); }
+            set
+            {
+                var keys = value.Split(new[] { "#", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(s => new Keyword() { Value = s.Trim(), JobPost = this,JobPostId=this.Id });
+                this.Keywords.Clear();
+                foreach (var item in keys)
+                {
+                    this.Keywords.Add(item);
+                }
+            }
+        }
+
 
 
         public int? DeptId { get; set; }
@@ -45,9 +60,9 @@ namespace jobsite.Models
         public virtual ICollection<Keyword> Keywords { get; set; } = new HashSet<Keyword>();
 
         public virtual ICollection<JobApplication> Applications { get; set; } = new HashSet<JobApplication>();
-    
-    
-    
+
+
+
     }
 
 
