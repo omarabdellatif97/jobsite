@@ -101,7 +101,10 @@ namespace jobsite.Areas.Admin.Controllers
         }
 
 
-
+        private bool JobApplicationExists(int id)
+        {
+            return _context.JobApplications.Any(e => e.Id == id);
+        }
 
         #region Not Required
         //// GET: Admin/JobApplications
@@ -173,10 +176,7 @@ namespace jobsite.Areas.Admin.Controllers
         //    return RedirectToAction(nameof(Index));
         //}
 
-        //private bool JobApplicationExists(int id)
-        //{
-        //    return _context.JobApplications.Any(e => e.Id == id);
-        //}
+
         #endregion
 
 
