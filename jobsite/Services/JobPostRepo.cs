@@ -13,6 +13,21 @@ namespace jobsite.Services
         {
         }
 
+        public override JobPost Get(int id)
+        {
+            //return base.Get(id);
+
+            return context.JobPosts.Include(j => j.Keywords)
+                .Include(j=> j.Department)
+                .SingleOrDefault(j => j.Id == id);
+        }
+
+        public override IEnumerable<JobPost> GetAll()
+        {
+            //return base.GetAll();
+            return context.JobPosts.Include(j => j.Keywords)
+                .Include(j => j.Department).ToList();
+        }
     }
 
 

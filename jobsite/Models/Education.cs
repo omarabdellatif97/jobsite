@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace jobsite.Models
 {
     [Table("Education")]
-    public class Education
+    public class Education : EntityBase
     {
         [Key]
         public int Id { get; set; }
