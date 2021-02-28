@@ -26,7 +26,7 @@ namespace jobsite.Services
 
 
     public interface IRepository<TEntity> : IDisposable
-        where TEntity : IEntity
+        where TEntity : class
     {
         //IEnumerable<TEntity> Search(string value);
         TEntity Get(int id);

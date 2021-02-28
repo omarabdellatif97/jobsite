@@ -3,6 +3,7 @@ using jobsite.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,11 @@ namespace jobsite
             services.AddControllersWithViews();
             services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+                .AddEntityFrameworkStores<JobContext>()
+                .AddDefaultTokenProviders();
+            services.AddRazorPages();
+
 
         }
 
@@ -52,21 +58,7 @@ namespace jobsite
 
             app.UseAuthorization();
 
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //        name: "default",
-            //        pattern: "{controller=Home}/{action=Index}/{id?}");
-            //});
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //      name: "areas",
-            //      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-            //    );
-            //});
-
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
@@ -77,6 +69,8 @@ namespace jobsite
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                
+                endpoints.MapRazorPages();
             });
         }
     }

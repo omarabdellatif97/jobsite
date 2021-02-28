@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace jobsite.Services
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
 
         protected readonly JobContext Context;
