@@ -1,0 +1,39 @@
+﻿@using jobsite.Models
+
+@model JobApplication
+
+
+@{
+    ViewData["Title"] = "Apply";
+    Layout = "~/Areas/Candidate/Views/Shared/_Layout.cshtml";
+}
+
+<h1 style="text-align:center">Thanks for applying in our company </h1>
+<div>
+    <h2>Please upload your updated CV </h2>
+    @using (Html.BeginForm("Index",
+                   "Home",
+                   FormMethod.Post,
+                   new { enctype = "multipart/form-data" }))
+    {
+        <label for="file">Upload CV:</label>
+        <input type="file" name="CV" id="CV" /><br><br>
+        <input type="submit" value="Upload CV" />
+        <br><br>
+        @ViewBag.Message
+    }
+    <h2>When will you be able to join us ? (notice period)</h2>
+
+    <label asp-for="PrefDateToJoin" ></label>
+    <input asp-for="PrefDateToJoin" type="date" asp-format="{0:dd-MM-yyyy}" />
+
+</div>
+
+<div style="margin:auto">
+
+    <input type="button" value="SUBMIT" style=" font-family: Work Sans,Open Sans,Helvetica,Arial,sans-serif; color: #fff; background-color: cornflowerblue; border-color: #02bb8c; border-radius: 50px; padding: 8px 12px; font-size: 14px; /* line-height: inherit; */ width: 180px; max-width: 100%;" onclick="window.location.href='<%= Url.Action("Index", "Home" ) %>';" / >
+
+</div>
+
+
+
