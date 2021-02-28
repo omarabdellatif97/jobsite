@@ -5,7 +5,8 @@ namespace jobsite.Services
 {
     public interface ICandidateRepo : IRepository<Candidate>
     {
-        IEnumerable<CV> GetJobApplications(int id);
+        IEnumerable<Candidate> GetAll(JobPost post);
+
     }
 
 

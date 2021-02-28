@@ -14,6 +14,17 @@ namespace jobsite.Services
         {
 
         }
+
+        public override CV Get(int id)
+        {
+            return base.Get(id);
+            //return context.CVs.Include(cv=>job)
+        }
+
+        public override IEnumerable<CV> GetAll()
+        {
+            return base.GetAll();
+        }
     }
 
 

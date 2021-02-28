@@ -15,6 +15,15 @@ namespace jobsite.Services
 
         }
 
+        public override Admin Get(int id)
+        {
+            return base.Get(id);
+        }
+
+        public override IEnumerable<Admin> GetAll()
+        {
+            return base.GetAll();
+        }
     }
 
 

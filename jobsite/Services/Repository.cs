@@ -11,73 +11,73 @@ namespace jobsite.Services
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
 
-        protected readonly JobContext Context;
+        protected readonly JobContext context;
         private bool disposedValue;
 
         public Repository(JobContext context)
         {
-            Context = context;
+            this.context = context;
         }
 
-        public TEntity Get(int id)
+        public virtual TEntity Get(int id)
         {
-            return Context.Set<TEntity>().Find(id);
+            return context.Set<TEntity>().Find(id);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            return Context.Set<TEntity>().ToList();
+            return context.Set<TEntity>().ToList();
         }
 
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return Context.Set<TEntity>().Where(predicate);
+            return context.Set<TEntity>().Where(predicate);
         }
 
-        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return Context.Set<TEntity>().SingleOrDefault(predicate);
+            return context.Set<TEntity>().SingleOrDefault(predicate);
         }
 
-        public void Add(TEntity entity)
+        public virtual void Add(TEntity entity)
         {
-            Context.Set<TEntity>().Add(entity);
+            context.Set<TEntity>().Add(entity);
         }
 
-        public void AddRange(IEnumerable<TEntity> entities)
+        public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            Context.Set<TEntity>().AddRange(entities);
+            context.Set<TEntity>().AddRange(entities);
         }
 
-        public void Remove(TEntity entity)
+        public virtual void Remove(TEntity entity)
         {
-            Context.Set<TEntity>().Remove(entity);
+            context.Set<TEntity>().Remove(entity);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
-            Context.Set<TEntity>().RemoveRange(entities);
+            context.Set<TEntity>().RemoveRange(entities);
         }
 
-        //public IEnumerable<TEntity> Search(string value)
+        //public virtual IEnumerable<TEntity> Search(string value)
         //{
         //    throw new NotImplementedException();
         //}
 
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
-            Context.Entry<TEntity>(entity).State = EntityState.Modified;
+            context.Entry<TEntity>(entity).State = EntityState.Modified;
         }
 
-        public void Save()
+        public virtual void Save()
         {
-            this.Context.SaveChanges();
+            this.context.SaveChanges();
         }
 
-        public Task<int> SaveAsync()
+        public virtual Task<int> SaveAsync()
         {
-            return this.Context.SaveChangesAsync();
+            return this.context.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

@@ -15,7 +15,15 @@ namespace jobsite.Services
         {
         }
 
+        public override Department Get(int id)
+        {
+            return base.Get(id);
+        }
 
+        public override IEnumerable<Department> GetAll()
+        {
+            return base.GetAll();
+        }
     }
 
 

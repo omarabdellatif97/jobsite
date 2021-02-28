@@ -14,11 +14,34 @@ namespace jobsite.Services
         {
         }
 
-        
 
-        public IEnumerable<CV> GetJobApplications(int id)
+
+        //TEntity Get(int id);
+        //IEnumerable<TEntity> GetAll();
+        //IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        //TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
+        //void Add(TEntity entity);
+        //void AddRange(IEnumerable<TEntity> entities);
+        //void Update(TEntity entity);
+        //void Remove(TEntity entity);
+        //void RemoveRange(IEnumerable<TEntity> entities);
+        //void Save();
+        //Task<int> SaveAsync();
+
+
+        public override Candidate Get(int id)
         {
-            throw new NotImplementedException();
+            return context.Candidates.Include(c=> c.Educations).FirstOrDefault(c=> c.Id == id);
+        }
+
+        public override IEnumerable<Candidate> GetAll()
+        {
+            return context.Candidates.Include(c => c.Educations).ToList();
+        }
+
+        public IEnumerable<Candidate> GetAll(JobPost post)
+        {
+            return context.JobPosts.Where(j => j.Id == post.Id).SelectMany(j => j.Applications.Select(a => a.Candidate)).ToList();
         }
     }
 

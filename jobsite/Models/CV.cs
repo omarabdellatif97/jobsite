@@ -28,7 +28,7 @@ namespace jobsite.Models
         //public int CandidateId { get; set; }
 
         //[ForeignKey("CandidateId")]
-        //public Candidate Candidate { get; set; }
+        public virtual Candidate Candidate { get; set; }
 
 
         public virtual ICollection<JobApplication> JobApplications { get; set; }
