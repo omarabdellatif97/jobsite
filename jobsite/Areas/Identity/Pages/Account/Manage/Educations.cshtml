@@ -1,4 +1,5 @@
-﻿@page
+﻿@*@page*@
+@page "{handler?}"
 @model EduacationsModel
 @{
     ViewData["Title"] = "Edit Educations";
@@ -10,7 +11,7 @@
 
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-7">
         <form id="profile-form" method="post">
 
 
@@ -108,6 +109,27 @@
         </div>
     </div>
 
+    <div class="col-4">
+        <form enctype="multipart/form-data" method="post">
+            <dl>
+                <dt>
+                    <label asp-for="FormFile"></label>
+                </dt>
+                <dd>
+                    <input asp-for="FormFile" type="file">
+                    <span asp-validation-for="FormFile"></span>
+                </dd>
+            </dl>
+            <input asp-page-handler="Upload" class="btn btn-danger" type="submit" value="Upload" />
+            <br />
+            @if (Model.CV != null)
+            {
+                <a asp-route-handler="Download">@Model.CV</a>
+            }
+            
+        </form>
+    </div>
+
 
     <script>
         console.log("check");
@@ -139,8 +161,7 @@
             rmvBtn.setAttribute('data-btn', id);
         }
 
-        function deleteEducation(eve)
-        {
+        function deleteEducation(eve) {
             var obj = eve.srcElement;
             var cnt = educDiv.querySelectorAll("#educations > div").length;
             var eduId = obj.getAttribute('data-btn');

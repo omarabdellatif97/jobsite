@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace jobsite.Areas.Controllers.Administrator
+namespace jobsite.Areas.Controllers.User
 {
-    [Area("Administrator")]
-    [Authorize("IsAdmin")]
-    public class JobPostsController : Controller
+    [Area("User")]
+    [Authorize("IsCandidate")]
+    public class JobsController : Controller
     {
         private readonly JobContext _context;
 
-        public JobPostsController(JobContext context)
+        public JobsController(JobContext context)
         {
             _context = context;
         }
@@ -106,7 +106,9 @@ namespace jobsite.Areas.Controllers.Administrator
             {
                 try
                 {
-                    _context.Update(jobPost);
+                    //_context.Attach(jobPost);
+                    _context.Entry(jobPost).State = EntityState.Modified;
+                    //_context.Update(jobPost);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -144,6 +146,26 @@ namespace jobsite.Areas.Controllers.Administrator
 
             return View(jobPost);
         }
+
+        // GET: Admin/JobPosts/Delete/5
+        public async Task<IActionResult> Apply(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var jobPost = await _context.JobPosts
+                .Include(j => j.Department)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (jobPost == null)
+            {
+                return NotFound();
+            }
+
+            return View(jobPost);
+        }
+
 
         // POST: Admin/JobPosts/Delete/5
         [HttpPost, ActionName("Delete")]

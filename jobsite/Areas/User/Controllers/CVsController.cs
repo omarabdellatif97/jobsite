@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.Net.Http.Headers;
 
-namespace jobsite.Areas.Candidate.Controllers
+namespace jobsite.Areas.User.Controllers
 {
-    [Area("Candidate")]
+    [Area("User")]
     public class CVsController : Controller
     {
         private readonly JobContext _context;

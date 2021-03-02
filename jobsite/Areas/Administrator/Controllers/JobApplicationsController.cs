@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 
-namespace jobsite.Areas.Admin.Controllers
+namespace jobsite.Areas.Administrator.Controllers
 {
     // Edit and Details only here for admin
-    [Area("Admin")]
+    [Area("Administrator")]
     public class JobApplicationsController : Controller
     {
         private readonly JobContext _context;

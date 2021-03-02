@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace jobsite.Models
 {
@@ -42,6 +43,8 @@ namespace jobsite.Models
             set
             {
                 var keys = value.Split(new[] { "#", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(s => new Keyword() { Value = s.Trim(), JobPost = this,JobPostId=this.Id });
+                var cnt2 = this.Keywords.Count;
+                Trace.WriteLine(cnt2);
                 this.Keywords.Clear();
                 foreach (var item in keys)
                 {

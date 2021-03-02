@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,10 +39,22 @@ namespace jobsite
                 );
             services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<JobContext>()
                 .AddDefaultTokenProviders()
                 .AddClaimsPrincipalFactory<ClaimsFactory>();
+
+
+            services.AddTransient<IEmailSender, EmailSender>(i =>
+                new EmailSender(
+                    Configuration["EmailSender:Host"],
+                    Configuration.GetValue<int>("EmailSender:Port"),
+                    Configuration.GetValue<bool>("EmailSender:EnableSSL"),
+                    Configuration["EmailSender:UserName"],
+                    Configuration["EmailSender:Password"]
+                )
+            );
+
 
             //services.ConfigureApplicationCookie(options =>
             //{
@@ -54,6 +67,10 @@ namespace jobsite
                 options.AddPolicy("IsCandidate", policyBuilder
                     => policyBuilder.AddRequirements(
                         new CandidateRequirement()
+                    ));
+                options.AddPolicy("IsAdmin", policyBuilder
+                    => policyBuilder.AddRequirements(
+                        new AdminRequirement()
                     ));
             });
 
@@ -79,6 +96,13 @@ namespace jobsite
 
             app.UseRouting();
 
+            //app.Use(async (context, next) =>
+            //{
+                
+            //    await next.Invoke();
+            //    // Do logging or other work that doesn't write to the Response.
+            //});
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -87,6 +111,11 @@ namespace jobsite
 
             app.UseEndpoints(endpoints =>
             {
+                //endpoints.Map("/Identity/Account/Manage/DownloadPersonalData", (context) => {
+                //    context.Response.StatusCode = 404;
+                //    return Task.CompletedTask;
+                //});
+
                 endpoints.MapControllerRoute(
                     name: "MyArea",
                     pattern: "{area:exists}/{controller}/{action=Index}/{id?}");

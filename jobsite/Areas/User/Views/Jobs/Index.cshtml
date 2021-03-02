@@ -20,10 +20,7 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="open-tab" data-toggle="tab" href="#opened" role="tab" aria-controls="home" aria-selected="true">opened</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="close-tab" data-toggle="tab" href="#closed" role="tab" aria-controls="profile" aria-selected="false">Closed</a>
+        <a class="nav-link active" id="open-tab" data-toggle="tab" href="#opened" role="tab" aria-controls="home" aria-selected="true">Opened</a>
     </li>
 </ul>
 <div class="tab-content" id="myTabContent">
@@ -52,31 +49,6 @@
             }
         }
     </div>
-    <div class="tab-pane fade" id="closed" role="tabpanel" aria-labelledby="close-tab">
-        @foreach (var y in Model)
-        {
-            if (y.Status == JobPostStatus.Closed)
-            {
-                <h3 style="display: inline;">@y.Title</h3> <span class="date">@y.PostDate.ToString("yyyy-MM-dd")</span>
-
-                <p>@y.Description</p>
-                <p>
-                    <svg width="18" height="18" viewBox="0 0 24 24" role="presentation" xmlns="http://www.w3.org/2000/svg" class="gc-icon"><g><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></g></svg><span>@y.Location</span>
-                    <svg width="16" height="18" viewBox="0 0 18 24" role="presentation" xmlns="http://www.w3.org/2000/svg" class="gc-icon"><g><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></g></svg><span>@y.Location</span>
-                </p>
-
-
-                <p style="display:inline"><a class="a1" asp-action="Edit" asp-route-id="@y.Id">Edit</a></p>
-                <p style="display:inline"><a class="a1" asp-action="Details" asp-route-id="@y.Id">Details</a></p>
-                <p style="display:inline"><a class="a1" asp-action="Delete" asp-route-id="@y.Id">Delete</a></p>
-
-
-                <hr />
-
-            }
-        }
-    </div>
-
 </div>
 
 <style>

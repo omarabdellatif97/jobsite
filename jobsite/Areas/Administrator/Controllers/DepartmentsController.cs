@@ -7,26 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 
-namespace jobsite.Areas.User.Controllers
+namespace jobsite.Areas.Administrator.Controllers
 {
-    [Area("User")]
-    public class EducationsController : Controller
+    [Area("Administrator")]
+    public class DepartmentsController : Controller
     {
         private readonly JobContext _context;
 
-        public EducationsController(JobContext context)
+        public DepartmentsController(JobContext context)
         {
             _context = context;
         }
 
-        // GET: User/Educations
+        // GET: Administrator/Departments
         public async Task<IActionResult> Index()
         {
-            var jobContext = _context.Education.Include(e => e.Candidate);
-            return View(await jobContext.ToListAsync());
+            return View(await _context.Departments.ToListAsync());
         }
 
-        // GET: User/Educations/Details/5
+        // GET: Administrator/Departments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +33,39 @@ namespace jobsite.Areas.User.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Education
-                .Include(e => e.Candidate)
+            var department = await _context.Departments
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (education == null)
+            if (department == null)
             {
                 return NotFound();
             }
 
-            return View(education);
+            return View(department);
         }
 
-        // GET: User/Educations/Create
+        // GET: Administrator/Departments/Create
         public IActionResult Create()
         {
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Discriminator");
             return View();
         }
 
-        // POST: User/Educations/Create
+        // POST: Administrator/Departments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,School,Degree,FieldOfStudy,StartDate,EndDate,Grade,Description,CandidateId")] Education education)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Department department)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(education);
+                _context.Add(department);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Discriminator", education.CandidateId);
-            return View(education);
+            return View(department);
         }
 
-        // GET: User/Educations/Edit/5
+        // GET: Administrator/Departments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +73,22 @@ namespace jobsite.Areas.User.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Education.FindAsync(id);
-            if (education == null)
+            var department = await _context.Departments.FindAsync(id);
+            if (department == null)
             {
                 return NotFound();
             }
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Discriminator", education.CandidateId);
-            return View(education);
+            return View(department);
         }
 
-        // POST: User/Educations/Edit/5
+        // POST: Administrator/Departments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,School,Degree,FieldOfStudy,StartDate,EndDate,Grade,Description,CandidateId")] Education education)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Department department)
         {
-            if (id != education.Id)
+            if (id != department.Id)
             {
                 return NotFound();
             }
@@ -102,12 +97,12 @@ namespace jobsite.Areas.User.Controllers
             {
                 try
                 {
-                    _context.Update(education);
+                    _context.Update(department);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EducationExists(education.Id))
+                    if (!DepartmentExists(department.Id))
                     {
                         return NotFound();
                     }
@@ -118,11 +113,10 @@ namespace jobsite.Areas.User.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Discriminator", education.CandidateId);
-            return View(education);
+            return View(department);
         }
 
-        // GET: User/Educations/Delete/5
+        // GET: Administrator/Departments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,31 +124,30 @@ namespace jobsite.Areas.User.Controllers
                 return NotFound();
             }
 
-            var education = await _context.Education
-                .Include(e => e.Candidate)
+            var department = await _context.Departments
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (education == null)
+            if (department == null)
             {
                 return NotFound();
             }
 
-            return View(education);
+            return View(department);
         }
 
-        // POST: User/Educations/Delete/5
+        // POST: Administrator/Departments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var education = await _context.Education.FindAsync(id);
-            _context.Education.Remove(education);
+            var department = await _context.Departments.FindAsync(id);
+            _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EducationExists(int id)
+        private bool DepartmentExists(int id)
         {
-            return _context.Education.Any(e => e.Id == id);
+            return _context.Departments.Any(e => e.Id == id);
         }
     }
 }

@@ -10,8 +10,8 @@ using jobsite.Models;
 namespace jobsite.Migrations
 {
     [DbContext(typeof(JobContext))]
-    [Migration("20210301192123_identity1")]
-    partial class identity1
+    [Migration("20210302140050_identity")]
+    partial class identity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -21,10 +21,9 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
         public static string ExternalLogins => "ExternalLogins";
 
         public static string PersonalData => "PersonalData";
-
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
         public static string Educations => "Educations";
-
+        public static string AddAdmin => "AddAdmin";
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
@@ -41,6 +40,7 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
 
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
         public static string EducationsClass(ViewContext viewContext) => PageNavClass(viewContext, Educations);
+        public static string AddAdminClass(ViewContext viewContext) => PageNavClass(viewContext, AddAdmin);
         private static string PageNavClass(ViewContext viewContext, string page)
         {
             var activePage = viewContext.ViewData["ActivePage"] as string
