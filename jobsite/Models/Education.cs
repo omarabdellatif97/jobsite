@@ -35,7 +35,7 @@ namespace jobsite.Models
         public int CandidateId { get; set; }
 
         [ForeignKey("CandidateId")]
-        public Candidate Candidate { get; set; }
+        virtual public Candidate Candidate { get; set; }
 
 
 

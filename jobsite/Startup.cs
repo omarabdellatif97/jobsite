@@ -1,7 +1,10 @@
-﻿using jobsite.Models;
+﻿using jobsite.Authorization;
+using jobsite.Models;
 using jobsite.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,15 +30,35 @@ namespace jobsite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(
+                options => {
+                    options.Filters.Add(typeof(IdentityContorllerFilter));
+                    options.Filters.Add(typeof(IdentityPageFilter));
+                    }
+                );
             services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddIdentity<ApplicationUser, IdentityRole<int>>()
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<JobContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddClaimsPrincipalFactory<ClaimsFactory>();
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.LoginPath = new PathString("/User/Account/Login");
+            //});
+
             services.AddRazorPages();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsCandidate", policyBuilder
+                    => policyBuilder.AddRequirements(
+                        new CandidateRequirement()
+                    ));
+            });
 
-
+            services.AddSingleton<IAuthorizationHandler, AdminHandler>();
+            services.AddSingleton<IAuthorizationHandler, CandidateHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,9 +79,11 @@ namespace jobsite
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
-            app.UseAuthentication();
+            
 
             app.UseEndpoints(endpoints =>
             {

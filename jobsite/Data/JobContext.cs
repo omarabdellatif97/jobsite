@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using jobsite.Models;
 
 namespace jobsite.Models
 {
@@ -23,7 +24,22 @@ namespace jobsite.Models
         public DbSet<Keyword> Keywords{ get; set; }
         public DbSet<Department> Departments { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>()
+                .HasDiscriminator(u => u.Discriminator);
 
+            base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+            base.OnConfiguring(optionsBuilder);
+        }
+
+
+        public DbSet<jobsite.Models.Education> Education { get; set; }
 
     }
 
