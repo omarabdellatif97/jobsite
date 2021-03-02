@@ -33,6 +33,17 @@ namespace jobsite.Services
                 .SingleOrDefault(j => j.Id == id);
         }
 
+
+        public JobPost GetWithApplications(int id)
+        {
+            //return base.Get(id);
+
+            return context.JobPosts
+                .Include(j => j.Department)
+                .Include(j=> j.Applications)
+                .SingleOrDefault(j => j.Id == id);
+        }
+
         public override IEnumerable<JobPost> GetAll()
         {
             //return base.GetAll();
