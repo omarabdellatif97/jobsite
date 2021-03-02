@@ -20,7 +20,12 @@ namespace jobsite.Areas.Admin.Controllers
             _context = context;
         }
 
-        
+        public IActionResult DownloadCV(int id)
+        {
+            var file = _context.CVs.Find(id);
+            return File(file.Content, "application/pdf", $"{file.Title}{file.Extension}");
+        }
+
 
         // GET: Admin/JobApplications/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -31,7 +36,6 @@ namespace jobsite.Areas.Admin.Controllers
             }
 
             var jobApplication = await _context.JobApplications
-                .Include(j => j.CV)
                 .Include(j => j.Candidate)
                 .Include(j => j.JobPost)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -51,14 +55,17 @@ namespace jobsite.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplications.FindAsync(id);
+            var jobApplication = await _context.JobApplications
+                .Include(j => j.Candidate)
+                .Include(j => j.JobPost)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (jobApplication == null)
             {
                 return NotFound();
             }
-            ViewData["CVId"] = new SelectList(_context.CVs, "Id", "Extension", jobApplication.CVId);
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Address", jobApplication.CandidateId);
-            ViewData["JobPostId"] = new SelectList(_context.JobPosts, "Id", "Description", jobApplication.JobPostId);
+            //ViewData["CVId"] = new SelectList(_context.CVs, "Id", "Extension", jobApplication.CVId);
+            //ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Address", jobApplication.CandidateId);
+            //ViewData["JobPostId"] = new SelectList(_context.JobPosts, "Id", "Description", jobApplication.JobPostId);
             return View(jobApplication);
         }
 
@@ -107,7 +114,7 @@ namespace jobsite.Areas.Admin.Controllers
         }
 
         #region Not Required
-        //// GET: Admin/JobApplications
+        // GET: Admin/JobApplications
         //public async Task<IActionResult> Index()
         //{
         //    var jobContext = _context.JobApplications.Include(j => j.CV).Include(j => j.Candidate).Include(j => j.JobPost);

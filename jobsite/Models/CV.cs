@@ -24,6 +24,9 @@ namespace jobsite.Models
         [MaxLength(20, ErrorMessage = "max length is 20 characters")]
         public string Extension { get; set; }
 
+        //[NotMapped] in asp.net not in core
+        //public HttpPostedFileBase UploadFile { get; set; }
+
 
         //public int CandidateId { get; set; }
 
