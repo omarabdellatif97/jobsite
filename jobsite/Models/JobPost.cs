@@ -34,30 +34,26 @@ namespace jobsite.Models
         [Required]
         public JobPostStatus Status { get; set; }
 
+
         [MaxLength(400)]
-        [NotMapped]
         public string KeywordsText
         {
-            get { return string.Join($"{Environment.NewLine}#",this.Keywords.Select(k=> k.Value)); }
-            set
-            {
-                var keys = value.Split(new[] { "#", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(s => new Keyword() { Value = s.Trim(), JobPost = this,JobPostId=this.Id });
-                this.Keywords.Clear();
-                foreach (var item in keys)
-                {
-                    this.Keywords.Add(item);
-                }
-            }
+            get;
+            set;
         }
 
-
+        [NotMapped]
+        public List<string> KeywordsList
+        {
+            get => KeywordsText.Split(new[] { "#" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        }
 
         public int? DeptId { get; set; }
 
         [ForeignKey("DeptId")]
         public virtual Department Department { get; set; }
 
-        public virtual ICollection<Keyword> Keywords { get; set; } = new HashSet<Keyword>();
+        //public virtual ICollection<Keyword> Keywords { get; set; } = new HashSet<Keyword>();
 
         public virtual ICollection<JobApplication> Applications { get; set; } = new HashSet<JobApplication>();
 
