@@ -7,27 +7,14 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Job Application</h4>
+    <h4>JobApplication</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Candidate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Candidate.Name)
-        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.JobPost)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.JobPost.Title)
-        </dd>
-
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.JobPost.PostDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.JobPost.PostDate)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.AppDate)
@@ -47,14 +34,14 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.AppStatus)
         </dd>
-
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CV)
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-action="DownloadCV" asp-route-id="@Model.CVId">@Model.CV.Title</a>
+        </dd>
     </dl>
 </div>
-
-
 <div>
-    <a asp-action="DownloadCV" asp-route-id="@Model.CVId">Download CV</a>|
-    <a asp-action="Edit" asp-route-id="@Model.Id">Change Status Of Application</a> |
-    <a asp-action="Details" asp-controller="JobPosts" asp-route-id="@Model.JobPostId">Back to List</a>
-
+    <a asp-action="Index">Back to List</a>
 </div>

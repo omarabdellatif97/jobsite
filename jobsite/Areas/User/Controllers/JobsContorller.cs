@@ -94,7 +94,9 @@ namespace jobsite.Areas.Controllers.User
                 return NotFound();
             }
 
-            var jobPost = await _context.JobPosts.Include(j => j.Keywords).FirstOrDefaultAsync(j => j.Id == id);
+            var jobPost = await _context.JobPosts
+                .Include(j => j.Department)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (jobPost == null)
             {
                 return NotFound();

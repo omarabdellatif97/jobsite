@@ -13,7 +13,7 @@
 
     @if (ViewData["Discriminator"] is string str2 && str2 == "Admin")
     {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.EducationsClass(ViewContext)" id="Educations" asp-page="./AddAdmin">Add Admin</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.AddAdminClass(ViewContext)" id="Educations" asp-page="./AddAdmin">Add Admin</a></li>
     }
 
     @*@if (hasExternalLogins)

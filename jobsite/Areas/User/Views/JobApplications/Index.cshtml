@@ -1,10 +1,10 @@
-﻿@model jobsite.Models.JobPost
+﻿@model IEnumerable<jobsite.Models.JobApplication>
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Index";
 }
 
-<h1>JobPost</h1>
+<h1>My Applications</h1>
 
 <div>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -19,28 +19,29 @@
 
 
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="open-tab">
+        <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Candidate Name</th>
-                        <th scope="col">Application Date</th>
+                        <th scope="col">Job Title</th>
                         <th scope="col">Application Status</th>
+                        @*<th scope="col">Candidate ID</th>*@
+                        <th scope="col">Application Date</th>
                         <th scope="col">Link to Candidate Application</th>
                         <th scope="col">DownLoad CV</th>
                     </tr>
                 </thead>
-
-                @foreach (var x in Model.Applications)
+                @foreach (var x in Model)
                 {
                     if (x.AppStatus != AppStatus.NotSelected)
                     {
 
+
                         <tbody>
                             <tr>
-                                <td>@x.Candidate.Name</td>
-                                <td>@x.AppDate</td>
+                                <td>@x.JobPost.Title</td>
                                 <td>@x.AppStatus</td>
+                                <td>@x.AppDate</td>
                                 <td><a asp-controller="JobApplications" asp-action="Details" asp-route-id="@x.Id">Show job Application</a></td>
                                 <td><a asp-controller="JobApplications" asp-action="DownloadCV" asp-route-id="@x.CVId">@x.CV.Title</a></td>
                             </tr>
@@ -50,28 +51,30 @@
                 }
             </table>
         </div>
-        <div class="tab-pane fade" id="archived" role="tabpanel" aria-labelledby="close-tab">
+        <div class="tab-pane fade" id="archived" role="tabpanel" aria-labelledby="archived-tab">
+
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">Candidate Name</th>
-                        <th scope="col">Application Date</th>
+                        <th scope="col">Job Title</th>
                         <th scope="col">Application Status</th>
+                        @*<th scope="col">Candidate ID</th>*@
+                        <th scope="col">Application Date</th>
                         <th scope="col">Link to Candidate Application</th>
                         <th scope="col">DownLoad CV</th>
 
                     </tr>
                 </thead>
-                @foreach (var y in Model.Applications)
+                @foreach (var y in Model)
                 {
                     if (y.AppStatus == AppStatus.NotSelected)
                     {
 
                         <tbody>
                             <tr>
-                                <td>@y.Candidate.Name</td>
-                                <td>@y.AppDate.ToString("yyyy-MM-dd")</td>
+                                <td>@y.JobPost.Title</td>
                                 <td>@y.AppStatus</td>
+                                <td>@y.AppDate</td>
                                 <td><a asp-controller="JobApplications" asp-action="Details" asp-route-id="@y.Id">Show job Application</a></td>
                                 <td><a asp-controller="JobApplications" asp-action="DownloadCV" asp-route-id="@y.CVId">@y.CV.Title</a></td>
                             </tr>
@@ -82,50 +85,7 @@
             </table>
 
         </div>
-        <hr>
-
-        <dl class="row align-content-center">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Location)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Location)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.PostDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PostDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Status)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Status)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Department)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Department.Description)
-            </dd>
-        </dl>
     </div>
+</div>
 
-</div>
-<div>
-    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a class="btn btn-primary" asp-action="Index">Back to List</a>
-</div>
+

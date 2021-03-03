@@ -23,7 +23,7 @@ namespace jobsite.Areas.Administrator.Controllers
         public IActionResult DownloadCV(int id)
         {
             var file = _context.CVs.Find(id);
-            return File(file.Content, "application/pdf", $"{file.Title}{file.Extension}");
+            return File(file.Content, "application/pdf", $"{file.Title}");
         }
 
 
@@ -69,42 +69,38 @@ namespace jobsite.Areas.Administrator.Controllers
             return View(jobApplication);
         }
 
+
+
+
+
+
         // POST: Admin/JobApplications/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AppDate,PrefDateToJoin,AppStatus,JobPostId,CandidateId,CVId")] JobApplication jobApplication)
+        public async Task<IActionResult> Edit(int id, AppStatus appStatus)
         {
-            if (id != jobApplication.Id)
+            var jobApplication = await _context.JobApplications
+                .Include(j => j.Candidate)
+                .Include(j => j.JobPost)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+
+            if (jobApplication == null)
             {
                 return NotFound();
             }
 
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(jobApplication);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!JobApplicationExists(jobApplication.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                jobApplication.AppStatus = appStatus;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new {id = jobApplication.Id});
             }
-            ViewData["CVId"] = new SelectList(_context.CVs, "Id", "Extension", jobApplication.CVId);
-            ViewData["CandidateId"] = new SelectList(_context.Candidates, "Id", "Address", jobApplication.CandidateId);
-            ViewData["JobPostId"] = new SelectList(_context.JobPosts, "Id", "Description", jobApplication.JobPostId);
             return View(jobApplication);
+
         }
 
 
