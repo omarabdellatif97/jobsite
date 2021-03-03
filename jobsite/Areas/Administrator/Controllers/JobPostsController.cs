@@ -27,8 +27,11 @@ namespace jobsite.Areas.Controllers.Administrator
         // GET: Admin/JobPosts
         public async Task<IActionResult> Index()
         {
-            var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
-            return View(await jobContext.ToListAsync());
+            //var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
+            //var data = await jobContext.ToListAsync();
+            
+            var data = await unit.JobPosts.GetAllAsync();
+            return View(data);
         }
 
         //GET: Admin/JobPosts/Details/5
@@ -39,10 +42,15 @@ namespace jobsite.Areas.Controllers.Administrator
                 return NotFound();
             }
 
-            var jobPost = await _context.JobPosts
-                .Include(d => d.Applications)
-                .Include(j => j.Department)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var jobPost = await _context.JobPosts
+            //    .Include(d => d.Applications)
+            //    .Include(j => j.Department)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            var jobPost = await unit.JobPosts.GetAsync(id.Value);
+            var apps = await unit.JobApplications.GetAllAsync(j=> j.JobPostId == id.Value);
+
+            jobPost.Applications = apps;
+
             if (jobPost == null)
             {
                 return NotFound();
@@ -69,7 +77,9 @@ namespace jobsite.Areas.Controllers.Administrator
         public IActionResult Create()
         {
             //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name");
-            ViewBag.DeptId = new SelectList(unit.Departments.GetAll(), "Id", "Name");
+            //var dept = unit.Departments.GetAll();
+            //ViewBag.DeptId = new SelectList(dept, "Id", "Name");
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAll(), "Id", "Name");
             return View();
         }
 
@@ -100,15 +110,17 @@ namespace jobsite.Areas.Controllers.Administrator
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
+        public async Task<IActionResult> Create(JobPost jobPost)
         {
+            jobPost.PostDate = DateTime.Now;
             if (ModelState.IsValid)
             {
                 unit.JobPosts.Add(jobPost);
                 await unit.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeptId"] = new SelectList(unit.Departments.GetAll(), "Id", "Description", jobPost.DeptId);
+            //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name", jobPost.DeptId);
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAllIEnumerable(), "Id", "Name", jobPost.DeptId);
             return View(jobPost);
         }
 
@@ -150,7 +162,8 @@ namespace jobsite.Areas.Controllers.Administrator
             {
                 return NotFound();
             }
-            ViewData["DeptId"] = new SelectList(unit.Departments.GetAll(), "Id", "Description", jobPost.DeptId);
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAllIEnumerable(), "Id", "Name", jobPost.DeptId);
+            //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name", jobPost.DeptId);
             return View(jobPost);
         }
 
@@ -161,7 +174,7 @@ namespace jobsite.Areas.Controllers.Administrator
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
+        public async Task<IActionResult> Edit(int id, JobPost jobPost)
         {
             if (id != jobPost.Id)
             {
@@ -188,10 +201,42 @@ namespace jobsite.Areas.Controllers.Administrator
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
+            //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name", jobPost.DeptId);
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAllIEnumerable(), "Id", "Name", jobPost.DeptId);
             return View(jobPost);
         }
 
+
+        // Close JobPost
+        // GET: Admin/JobPosts/Delete/5
+        public IActionResult Close(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var jobPost = unit.JobPosts.Get(id.Value);
+            if (jobPost == null)
+            {
+                return NotFound();
+            }
+
+            return View(jobPost);
+        }
+
+        // POST: Admin/JobPosts/Delete/5
+        [HttpPost, ActionName("CloseConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloseConfirmed(int id)
+        {
+            //var jobPost = await _context.JobPosts.FindAsync(id);
+            //unit.JobPosts.Update(jobPost);
+            //await _context.SaveChangesAsync();
+            unit.JobPosts.closeJobPost(new JobPost() { Id = id });
+            await unit.SaveAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
 
 
@@ -218,9 +263,14 @@ namespace jobsite.Areas.Controllers.Administrator
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var jobPost = await _context.JobPosts.FindAsync(id);
-            _context.JobPosts.Remove(jobPost);
-            await _context.SaveChangesAsync();
+            //var jobPost = await _context.JobPosts.FindAsync(id);
+            //_context.JobPosts.Remove(jobPost);
+            //await _context.SaveChangesAsync();
+
+            var post = await unit.JobPosts.GetAsync(id);
+            unit.JobPosts.Remove(post);
+            await unit.SaveAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

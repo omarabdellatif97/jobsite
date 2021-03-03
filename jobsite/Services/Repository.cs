@@ -24,9 +24,32 @@ namespace jobsite.Services
             return context.Set<TEntity>().Find(id);
         }
 
+        public virtual TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        {
+            return context.Set<TEntity>().FirstOrDefault(predicate);
+        }
+
+        public virtual Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
+
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return context.Set<TEntity>().ToList();
+            //return context.Set<TEntity>().ToList();
+            return context.Set<TEntity>().AsNoTracking().ToList();
+        }
+
+        public virtual IEnumerable<TEntity> GetAllIEnumerable()
+        {
+            //return context.Set<TEntity>().ToList();
+            return context.Set<TEntity>().AsNoTracking();
+        }
+
+        public virtual Task<List<TEntity>> GetAllAsync()
+        {
+            //return context.Set<TEntity>().ToList();
+            return context.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
         //public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
@@ -38,6 +61,24 @@ namespace jobsite.Services
         //{
         //    return context.Set<TEntity>().SingleOrDefault(predicate);
         //}
+
+        public virtual Task<TEntity> GetAsync(int id)
+        {
+            return context.Set<TEntity>().FindAsync(id).AsTask();
+        }
+        public virtual IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
+        {
+            return GetAllIEnumerable().ToList();
+        }
+        public virtual IEnumerable<TEntity> GetAllIEnumerable(Expression<Func<TEntity, bool>> predicate)
+        {
+            return context.Set<TEntity>().Where(predicate);
+        }
+        public virtual Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return context.Set<TEntity>().Where(predicate).ToListAsync();
+        }
+
 
         public virtual void Add(TEntity entity)
         {
@@ -109,5 +150,6 @@ namespace jobsite.Services
             GC.SuppressFinalize(this);
         }
 
+  
     }
 }

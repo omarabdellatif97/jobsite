@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
+using jobsite.Services;
 
 namespace jobsite.Areas.Administrator.Controllers
 {
@@ -14,16 +15,19 @@ namespace jobsite.Areas.Administrator.Controllers
     public class JobApplicationsController : Controller
     {
         private readonly JobContext _context;
+        private readonly IUnitOfWork unit;
 
-        public JobApplicationsController(JobContext context)
+        public JobApplicationsController(JobContext context,IUnitOfWork unit)
         {
             _context = context;
+            this.unit = unit;
         }
 
-        public IActionResult DownloadCV(int id)
+        public async Task<IActionResult> DownloadCV(int id)
         {
-            var file = _context.CVs.Find(id);
-            return File(file.Content, "application/pdf", $"{file.Title}");
+            //var file = _context.CVs.Find(id);
+            var file = await unit.CV.GetAsync(id);
+            return File(file.Content, "application/pdf", $"{file.Title}{file.Extension}");
         }
 
 
@@ -35,10 +39,11 @@ namespace jobsite.Areas.Administrator.Controllers
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplications
-                .Include(j => j.Candidate)
-                .Include(j => j.JobPost)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var jobApplication = await _context.JobApplications
+            //    .Include(j => j.Candidate)
+            //    .Include(j => j.JobPost)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            var jobApplication = await unit.JobApplications.GetAsync(id.Value);
             if (jobApplication == null)
             {
                 return NotFound();
@@ -55,10 +60,12 @@ namespace jobsite.Areas.Administrator.Controllers
                 return NotFound();
             }
 
-            var jobApplication = await _context.JobApplications
-                .Include(j => j.Candidate)
-                .Include(j => j.JobPost)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var jobApplication = await _context.JobApplications
+            //    .Include(j => j.Candidate)
+            //    .Include(j => j.JobPost)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+
+            var jobApplication = await unit.JobApplications.GetAsync(id.Value);
             if (jobApplication == null)
             {
                 return NotFound();
@@ -81,10 +88,13 @@ namespace jobsite.Areas.Administrator.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AppStatus appStatus)
         {
-            var jobApplication = await _context.JobApplications
-                .Include(j => j.Candidate)
-                .Include(j => j.JobPost)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var jobApplication = await _context.JobApplications
+            //    .Include(j => j.Candidate)
+            //    .Include(j => j.JobPost)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+
+            var jobApplication = await unit.JobApplications.GetAsync(id);
+
 
 
             if (jobApplication == null)
@@ -96,7 +106,10 @@ namespace jobsite.Areas.Administrator.Controllers
             if (ModelState.IsValid)
             {
                 jobApplication.AppStatus = appStatus;
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
+
+                await unit.JobApplications.SaveAsync();
+
                 return RedirectToAction(nameof(Details), new {id = jobApplication.Id});
             }
             return View(jobApplication);
