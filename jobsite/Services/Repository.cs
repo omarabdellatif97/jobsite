@@ -29,15 +29,15 @@ namespace jobsite.Services
             return context.Set<TEntity>().ToList();
         }
 
-        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            return context.Set<TEntity>().Where(predicate);
-        }
+        //public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        //{
+        //    return context.Set<TEntity>().Where(predicate);
+        //}
 
-        public virtual TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
-        {
-            return context.Set<TEntity>().SingleOrDefault(predicate);
-        }
+        //public virtual TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate)
+        //{
+        //    return context.Set<TEntity>().SingleOrDefault(predicate);
+        //}
 
         public virtual void Add(TEntity entity)
         {

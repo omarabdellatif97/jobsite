@@ -1,6 +1,7 @@
 ﻿using jobsite.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -88,11 +89,15 @@ namespace jobsite.Services
 
         public void Save()
         {
+            context.ChangeTracker.DetectChanges();
+            Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
             this.context.SaveChanges();
         }
 
         public Task<int> SaveAsync()
         {
+            context.ChangeTracker.DetectChanges();
+            Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
             return context.SaveChangesAsync();
         }
 

@@ -21,7 +21,7 @@ namespace jobsite.Models
         public DbSet<JobPost> JobPosts { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<CV> CVs { get; set; }
-        public DbSet<Keyword> Keywords{ get; set; }
+        //public DbSet<Keyword> Keywords{ get; set; }
         public DbSet<Department> Departments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -388,6 +388,10 @@ namespace jobsite.Migrations
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("KeywordsText")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
                     b.Property<string>("Location")
                         .IsRequired()
                         .HasMaxLength(80)
@@ -409,35 +413,6 @@ namespace jobsite.Migrations
                     b.HasIndex("DeptId");
 
                     b.ToTable("JobPost");
-                });
-
-            modelBuilder.Entity("jobsite.Models.Keyword", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("JobPostId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("JobPostId");
-
-                    b.ToTable("Keyword");
-                });
-
-            modelBuilder.Entity("jobsite.Models.Admin", b =>
-                {
-                    b.HasBaseType("jobsite.Models.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("jobsite.Models.Candidate", b =>
@@ -552,18 +527,7 @@ namespace jobsite.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("jobsite.Models.Keyword", b =>
-                {
-                    b.HasOne("jobsite.Models.JobPost", "JobPost")
-                        .WithMany("Keywords")
-                        .HasForeignKey("JobPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("JobPost");
-                });
-
-            modelBuilder.Entity("jobsite.Models.Candidate", b =>
+            modelBuilder.Entity("jobsite.Models.CV", b =>
                 {
                     b.HasOne("jobsite.Models.CV", "CV")
                         .WithOne("Candidate")
@@ -587,8 +551,6 @@ namespace jobsite.Migrations
             modelBuilder.Entity("jobsite.Models.JobPost", b =>
                 {
                     b.Navigation("Applications");
-
-                    b.Navigation("Keywords");
                 });
 
             modelBuilder.Entity("jobsite.Models.Candidate", b =>

@@ -25,7 +25,8 @@ namespace jobsite.Areas.User.Controllers
         public IActionResult Download(int id)
         {
             var file = _context.CVs.Find(id);
-            return File(file.Content, "application/pdf", file.Title);
+            //return File(file.Content, "application/pdf", file.Title);
+            return File(file.Content, "application/octet-stream", file.Title);
         }
 
         // GET: Candidate/CVs

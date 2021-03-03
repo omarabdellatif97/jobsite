@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 using Microsoft.AspNetCore.Authorization;
+using jobsite.Services;
 
 namespace jobsite.Areas.Controllers.Administrator
 {
@@ -15,10 +16,12 @@ namespace jobsite.Areas.Controllers.Administrator
     public class JobPostsController : Controller
     {
         private readonly JobContext _context;
+        private readonly IUnitOfWork unit;
 
-        public JobPostsController(JobContext context)
+        public JobPostsController(JobContext context,IUnitOfWork unit)
         {
             _context = context;
+            this.unit = unit;
         }
 
         // GET: Admin/JobPosts
@@ -28,7 +31,7 @@ namespace jobsite.Areas.Controllers.Administrator
             return View(await jobContext.ToListAsync());
         }
 
-        // GET: Admin/JobPosts/Details/5
+        //GET: Admin/JobPosts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -48,13 +51,49 @@ namespace jobsite.Areas.Controllers.Administrator
             return View(jobPost);
         }
 
+
+
+
+        // GET: Admin/JobPosts/Create
+        //public IActionResult Create()
+        //{
+        //    //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name");
+        //    ViewBag.DeptId = new SelectList(_context.Departments, "Id", "Name");
+        //    return View();
+        //}
+
+
+
+
         // GET: Admin/JobPosts/Create
         public IActionResult Create()
         {
             //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name");
-            ViewBag.DeptId = new SelectList(_context.Departments, "Id", "Name");
+            ViewBag.DeptId = new SelectList(unit.Departments.GetAll(), "Id", "Name");
             return View();
         }
+
+
+
+
+        // POST: Admin/JobPosts/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(jobPost);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
+        //    return View(jobPost);
+        //}
+
+
 
         // POST: Admin/JobPosts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -65,30 +104,57 @@ namespace jobsite.Areas.Controllers.Administrator
         {
             if (ModelState.IsValid)
             {
-                _context.Add(jobPost);
-                await _context.SaveChangesAsync();
+                unit.JobPosts.Add(jobPost);
+                await unit.SaveAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAll(), "Id", "Description", jobPost.DeptId);
             return View(jobPost);
         }
 
+
+
+
+
+
+
+        //// GET: Admin/JobPosts/Edit/5
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var jobPost = await _context.JobPosts.Include(j=> j.Keywords).FirstOrDefaultAsync(j=> j.Id == id);
+        //    if (jobPost == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
+        //    return View(jobPost);
+        //}
+
+
+
         // GET: Admin/JobPosts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var jobPost = await _context.JobPosts.Include(j => j.Keywords).FirstOrDefaultAsync(j => j.Id == id);
+            var jobPost = unit.JobPosts.Get(id.Value);
             if (jobPost == null)
             {
                 return NotFound();
             }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
+            ViewData["DeptId"] = new SelectList(unit.Departments.GetAll(), "Id", "Description", jobPost.DeptId);
             return View(jobPost);
         }
+
+
 
         // POST: Admin/JobPosts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -106,8 +172,8 @@ namespace jobsite.Areas.Controllers.Administrator
             {
                 try
                 {
-                    _context.Update(jobPost);
-                    await _context.SaveChangesAsync();
+                    unit.JobPosts.Update(jobPost);
+                    await unit.SaveAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,17 +192,19 @@ namespace jobsite.Areas.Controllers.Administrator
             return View(jobPost);
         }
 
+
+
+
+
         // GET: Admin/JobPosts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var jobPost = await _context.JobPosts
-                .Include(j => j.Department)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var jobPost = unit.JobPosts.Get(id.Value);
             if (jobPost == null)
             {
                 return NotFound();
