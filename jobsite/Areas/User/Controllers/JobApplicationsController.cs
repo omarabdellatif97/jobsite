@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jobsite.Areas.User.Controllers
 {
     [Area("User")]
+    [Authorize("IsCandidate")]
     public class JobApplicationsController : Controller
     {
         private readonly JobContext _context;
