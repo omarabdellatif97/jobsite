@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using jobsite.Annotations;
+using Microsoft.AspNetCore.Identity;
+using System.IO;
 
 namespace jobsite.Areas.Controllers.User
 {
@@ -16,9 +21,17 @@ namespace jobsite.Areas.Controllers.User
     {
         private readonly JobContext _context;
 
-        public JobsController(JobContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+  
+
+        public JobsController(JobContext context, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         // GET: Admin/JobPosts
@@ -147,6 +160,29 @@ namespace jobsite.Areas.Controllers.User
             return View(jobPost);
         }
 
+
+
+
+        private async Task LoadAsync(ApplicationUser user, BinderModel binderModel)
+        {
+            var userName = await _userManager.GetUserNameAsync(user);
+
+            binderModel.Username = userName;
+            if (((Candidate)user).CV != null)
+            {
+                binderModel.CV = ((Candidate)user).CV.Title;
+            }
+            else
+            {
+                binderModel.CV = null;
+            }
+            binderModel.Input = ((Candidate)user).Educations;
+        }
+
+
+
+
+
         // GET: Admin/JobPosts/Delete/5
         public async Task<IActionResult> Apply(int? id)
         {
@@ -163,7 +199,152 @@ namespace jobsite.Areas.Controllers.User
                 return NotFound();
             }
 
-            return View(jobPost);
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (((Candidate)user).JobApplications.Any(J => J.JobPostId == jobPost.Id))
+            {
+                TempData["AppMessage"] = "You have already applied.";
+                return RedirectToAction(nameof(Details), new { id = jobPost.Id });
+            }
+
+
+            BinderModel binderModel = new BinderModel();
+            binderModel.PrefDateToJoin = null;
+            await LoadAsync(user, binderModel);
+            
+
+
+            return View(binderModel);
+        }
+
+
+        public class BinderModel
+        {
+            public IFormFile FormFile { get; set; }
+
+            [Required]
+            [CurrentDate(ErrorMessage = "Date must be after or equal to current date")]
+            [DataType(DataType.Date)]
+            public DateTime? PrefDateToJoin { get; set; }
+
+            public ICollection<Education> Input { get; set; }
+            //public ICollection<jobsite.Models.Education> Input { get; set; };
+            public String Username { get; set; }
+            public String CV { get; set; }
+
+        }
+
+
+        // POST: Admin/JobPosts/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Apply(int id, [Bind("PrefDateToJoin,FormFile")] BinderModel binderModel, ICollection<Education> Input)
+        {
+            var jobPost = await _context.JobPosts.FindAsync(id);
+
+            var context = this.Request;
+
+            if (jobPost == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (((Candidate)user).JobApplications.Any(J => J.JobPostId == jobPost.Id))
+            {
+                TempData["AppMessage"] = "You have already applied.";
+                return RedirectToAction(nameof(Details), new { id = jobPost.Id });
+            }
+
+
+
+            bool cvUploaded = (binderModel.FormFile != null);
+
+            if (!cvUploaded && ((Candidate)user).CV == null)
+            {
+                //binderModel.StatusMessage = "You must provide cv to apply.";
+                ModelState.AddModelError("CV", "You must provide cv to apply.");
+                binderModel = new BinderModel();
+                await LoadAsync(user, binderModel);
+                //TempData["StatusMessage"] = "You must provide cv to apply.";
+                return View(binderModel);
+            }
+            byte[] Content = new byte[0];
+
+            if (cvUploaded)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await binderModel.FormFile.CopyToAsync(memoryStream);
+
+                    // Upload the file if less than 2 MB
+                    if (memoryStream.Length < 2097152 * 4)
+                    {
+                        Content = memoryStream.ToArray();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "The file is too large.");
+                    }
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                binderModel = new BinderModel();
+                await LoadAsync(user, binderModel);
+                return View(binderModel);
+            }
+
+            var cnt = ((Candidate)user).Educations.Count;
+            ((Candidate)user).Educations = Input;
+
+            if (cvUploaded)
+            {
+                CV cv = new CV();
+                cv.Title = binderModel.FormFile.FileName;
+                cv.Content = Content;
+                cv.Extension = Path.GetExtension(binderModel.FormFile.FileName);
+                if (cv.Extension.Length > 20)
+                {
+                    cv.Extension = "unknown";
+                }
+                ((Candidate)user).CV = cv;
+            }
+
+            var updt = await _userManager.UpdateAsync(user);
+            if (!updt.Succeeded)
+            {
+                TempData["AppMessage"] = "Unexpected error when trying to update educations.";
+                //binderModel.StatusMessage = "Unexpected error when trying to update educations.";
+                return RedirectToAction();
+            }
+
+
+            var newApp = new JobApplication()
+            {
+                JobPostId = jobPost.Id,
+                CandidateId = user.Id,
+                CV = ((Candidate)user).CV,
+                AppStatus = AppStatus.AppReceived,
+                PrefDateToJoin = (DateTime)binderModel.PrefDateToJoin,
+                AppDate = DateTime.Now
+            };
+
+            _context.Add(newApp);
+            await _context.SaveChangesAsync();
+
+            TempData["AppMessage"] = "We Have Received Your Application.";
+            return RedirectToAction(nameof(Details), new { id = jobPost.Id });
         }
 
 

@@ -1,0 +1,207 @@
+﻿@model jobsite.Areas.Controllers.User.JobsController.BinderModel
+
+@{
+    var AppMessage = "AppMessage";
+ }
+<div class="row">
+    <partial name="_StatusMessage" model="TempData[AppMessage]" />
+</div>
+
+    <form enctype="multipart/form-data" method="post" class="container">
+        <div class="row">
+            @Html.ValidationMessageFor(model => model.CV, "", new { @class = "text-danger" })
+        </div>
+        <div class="row">
+            <div class="col-7">
+                <div id="educations">
+                    @for (int i = 0; i < Model.Input.ToList().Count; i++)
+                    {
+                        <div id="@("edu" + i)" style="background-color:beige; margin-bottom:3rem;">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="@Model.Input.ToList()[i].Id" />
+                            <div class="form-group f0">
+                                <label asp-for="@Model.Input.ToList()[i].School" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].School" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].School" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f1">
+                                <label asp-for="@Model.Input.ToList()[i].Degree" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].Degree" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].Degree" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f2">
+                                <label asp-for="@Model.Input.ToList()[i].FieldOfStudy" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].FieldOfStudy" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].FieldOfStudy" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f3">
+                                <label asp-for="@Model.Input.ToList()[i].StartDate" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].StartDate" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f4">
+                                <label asp-for="@Model.Input.ToList()[i].EndDate" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].EndDate" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f5">
+                                <label asp-for="@Model.Input.ToList()[i].Grade" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].Grade" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].Grade" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f6">
+                                <label asp-for="@Model.Input.ToList()[i].Description" class="control-label"></label>
+                                <input asp-for="@Model.Input.ToList()[i].Description" class="form-control" />
+                                <span asp-validation-for="@Model.Input.ToList()[i].Description" class="text-danger"></span>
+                            </div>
+                            <button type="button" class="btn btn-primary remove-edu offset-4 col-4" data-btn="@i" onclick="deleteEducation(event)">Remove Education</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn btn-primary" id="add-edu">Add Education</button>
+            </div>
+
+            <div class="col-4">
+                <div class="row">
+                    <dl>
+                        <dt>
+                            <label asp-for="FormFile"></label>
+                        </dt>
+                        <dd>
+                            <input asp-for="FormFile" type="file">
+                            <span asp-validation-for="FormFile"></span>
+                        </dd>
+                    </dl>
+                    <br />
+                    @if (Model.CV != null)
+                    {
+                        <a asp-route-handler="Download">@Model.CV</a>
+                    }
+                </div>
+
+                <div class="form-group row">
+                    <label asp-for="PrefDateToJoin" class="control-label"></label>
+                    <input asp-for="PrefDateToJoin" class="form-control" />
+                    <span asp-validation-for="PrefDateToJoin" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <button type="submit" class="btn btn-primary">Submit Your Application</button>
+        </div>
+    </form>
+
+
+
+    <div id="dummy" style="display: none; background-color:beige; margin-bottom:3rem;">
+        <div class="form-group f0">
+            <label class="control-label">School</label>
+            <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" data-val-required="The School field is required." maxlength="80" value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="form-group f1">
+            <label class="control-label">Degree</label>
+            <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="form-group f2">
+            <label class="control-label">FieldOfStudy</label>
+            <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="form-group f3" style="display:inline-block">
+            <label class="control-label">StartDate</label>
+            <input class="form-control" type="date" data-val="true" data-val-required="The StartDate field is required." value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="form-group f4" style="display:inline-block">
+            <label class="control-label">EndDate</label>
+            <input class="form-control" type="date" data-val="true" data-val-required="The EndDate field is required." value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+
+        <div class="form-group f5">
+            <label class="control-label">Grade</label>
+            <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+        <div class="form-group f6">
+            <label class="control-label">Description</label>
+            <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 255 character" data-val-maxlength-max="255" maxlength="255" value="">
+            <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+        </div>
+        <button type="button" class="btn btn-primary remove-edu offset-4 col-4">Remove Education</button>
+    </div>
+
+
+
+
+    <script>
+        console.log("check");
+        var educDiv = document.getElementById("educations");
+        var fields = ["School", "Degree", "FieldOfStudy", "StartDate", "EndDate", "Grade", "Description"];
+        var modelName = "Input";
+        var listName = "Educations";
+        var tempNode = document.getElementById("dummy");
+        tempNode.removeAttribute('id');
+        function createId(field, id) {
+            //var str = `${modelName}[${id}].${fields[field]}`;
+            var str = `[${id}].${fields[field]}`;
+            return str;
+        }
+
+        function setId(obj, id) {
+            obj.setAttribute("id", `edu${id}`);
+            //var cnt2 = obj.children.length;
+            var cnt2 = fields.length;
+            for (var i = 0; i < cnt2; i++) {
+                var fieldDiv = obj.getElementsByClassName(`f${i}`)[0];
+                var str = createId(i, id);
+                fieldDiv.children[0].setAttribute("for", str);
+                fieldDiv.children[1].setAttribute("id", str);
+                fieldDiv.children[1].setAttribute("Name", str);
+                fieldDiv.children[2].setAttribute("data-valmsg-for", str);
+            }
+            var rmvBtn = obj.getElementsByClassName(`remove-edu`)[0];
+            rmvBtn.setAttribute('data-btn', id);
+        }
+
+        function deleteEducation(eve) {
+            var obj = eve.srcElement;
+            var cnt = educDiv.querySelectorAll("#educations > div").length;
+            var eduId = obj.getAttribute('data-btn');
+            var eduDiv = document.getElementById(`edu${eduId}`);
+            for (var i = parseInt(eduId) + 1; i < cnt; i++) {
+                setId(document.getElementById(`edu${i}`), i - 1);
+            }
+            eduDiv.remove();
+        }
+
+        function addEducation() {
+            var cnt = educDiv.querySelectorAll("#educations > div").length;
+            var toAdd = tempNode.cloneNode(true);
+            console.log(toAdd);
+            setId(toAdd, cnt);
+            var rmvBtn = toAdd.getElementsByClassName(`remove-edu`)[0];
+            rmvBtn.addEventListener('click', deleteEducation)
+            toAdd.style.display = "block";
+            educDiv.appendChild(toAdd);
+        }
+        var btn = document.getElementById('add-edu');
+        var eduSec = document.getElementById('edu-sec');
+        btn.addEventListener('click', function () {
+            addEducation();
+        });
+    </script>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

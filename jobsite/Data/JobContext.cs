@@ -29,6 +29,10 @@ namespace jobsite.Models
             modelBuilder.Entity<ApplicationUser>()
                 .HasDiscriminator(u => u.Discriminator);
 
+            modelBuilder.Entity<JobApplication>()
+                .Property(a => a.AppDate)
+                .HasDefaultValueSql("getdate()");
+
             base.OnModelCreating(modelBuilder);
         }
 

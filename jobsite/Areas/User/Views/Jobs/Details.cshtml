@@ -4,11 +4,16 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@{
+    var AppMessage = "AppMessage";
+}
 
+<partial name="_StatusMessage" model="TempData[AppMessage]" />
+
+<h1>Details</h1>
 <div>
     <h4>JobPost</h4>
-    <dl class="row align-content-center" >
+    <dl class="row align-content-center">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
