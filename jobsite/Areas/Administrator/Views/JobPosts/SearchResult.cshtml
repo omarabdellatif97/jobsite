@@ -6,10 +6,14 @@
 }
 
 <h1>Job Posts Search Result</h1>
+
+<div class="col-md-4">
+    <p><a class="btn btn-link" asp-action="Index">Back To All Job Posts</a></p>
+</div>
 <div class="col-8">
     <form method="post" asp-action="Search" class="form">
-        <div class="form-group">
-            <input type="search" placeholder="Search by title" class="p-1 mb-1" value="@jobsearch" name="jobsearch" />
+        <div class="form-group ">
+            <input type="search" placeholder="General Search" class="p-1 mb-1" value="@jobsearch" name="jobsearch" />
             <input type="submit" value="Search" class="btn btn-primary" />
         </div>
     </form>
@@ -39,9 +43,6 @@
     }
 </div>
 
-<div class="col-md-4">
-    <p><a class="btn btn-link" asp-action="Index">Back To All Job Posts</a></p>
-</div>
 
 
 <style>

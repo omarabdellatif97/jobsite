@@ -1,0 +1,75 @@
+﻿@model IEnumerable<jobsite.Models.JobPost>
+
+@{
+    ViewData["Title"] = "Job Posts Search Result";
+    string jobsearch = (string)ViewData["jobsearch"];
+}
+
+<h1>Candidate Job Posts Search Result</h1>
+
+<div class="col-md-4">
+    <p><a class="btn btn-link" asp-action="Index">Back To All Job Posts</a></p>
+</div>
+
+<div class="col-8">
+    <form method="post" asp-action="Search" class="form">
+        <div class="form-group ">
+            <input type="search" placeholder="General Search" class="p-1 mb-1" value="@jobsearch" name="jobsearch" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="open-tab" data-toggle="tab" href="#opened" role="tab" aria-controls="home" aria-selected="true">Opened</a>
+    </li>
+</ul>
+<div class="col-12 col-md-8">
+    @foreach (var x in Model)
+    {
+        if (x.Status == JobPostStatus.Opened)
+        {
+
+            <h3 style="display: inline;">@x.Title</h3> <span class="date">@x.PostDate.ToString("yyyy-MM-dd")</span>
+
+
+            <p>@x.Description</p>
+
+            <p>
+                <svg width="18" height="18" viewBox="0 0 24 24" role="presentation" xmlns="http://www.w3.org/2000/svg" class="gc-icon"><g><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></g></svg><span>@x.Department.Name</span>
+                <svg width="16" height="18" viewBox="0 0 18 24" role="presentation" xmlns="http://www.w3.org/2000/svg" class="gc-icon"><g><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></g></svg><span>@x.Location</span>
+            </p>
+            <p style="display:inline"> <a class="a1" asp-action="Details" asp-route-id="@x.Id">Details</a></p>
+            <hr />
+
+        }
+    }
+</div>
+
+<style>
+    .date:before {
+        content: "( Posted on "
+    }
+
+    .date:after {
+        content: ")"
+    }
+
+
+
+
+
+    .a1 {
+        display: inline;
+        width: 115px;
+        height: 40px;
+        background: #4E9CAF;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        line-height: 25px;
+    }
+</style>

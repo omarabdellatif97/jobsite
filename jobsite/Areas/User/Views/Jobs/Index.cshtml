@@ -6,13 +6,15 @@
 
 <h1>All Job Posts</h1>
 
-<form method="get" asp-action="Index">
-    <p>
-        <input type="search" placeholder="Search by title" value="@ViewData["GetAll"] " name="jobsearch" />
-        <input type="submit" value="search" class="btn btn-primary" />
-    </p>
-</form>
 
+<div class="col-8">
+    <form method="post" asp-action="Search" class="form">
+        <div class="form-group">
+            <input type="search" placeholder="General Search" class="p-1 mb-1" value="" name="jobsearch" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">

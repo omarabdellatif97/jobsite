@@ -12,6 +12,7 @@ using System.ComponentModel.DataAnnotations;
 using jobsite.Annotations;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
+using jobsite.Services;
 
 namespace jobsite.Areas.Controllers.User
 {
@@ -23,13 +24,15 @@ namespace jobsite.Areas.Controllers.User
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IUnitOfWork unit;
 
         public JobsController(JobContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, IUnitOfWork unit)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            this.unit = unit;
         }
 
         // GET: Admin/JobPosts
@@ -38,6 +41,27 @@ namespace jobsite.Areas.Controllers.User
             var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
             return View(await jobContext.ToListAsync());
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Search(string jobsearch)
+        {
+            var search = jobsearch;
+            return RedirectToAction(nameof(SearchResult), new { jobsearch = search });
+        }
+
+
+        public async Task<IActionResult> SearchResult(string jobsearch)
+        {
+            //var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
+            //var data = await jobContext.ToListAsync();
+            ViewData["jobsearch"] = jobsearch;
+            var data = await unit.JobPosts.SearchAsync(jobsearch);
+            return View(data);
+        }
+
+
 
         // GET: Admin/JobPosts/Details/5
         public async Task<IActionResult> Details(int? id)
