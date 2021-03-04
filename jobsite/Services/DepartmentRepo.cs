@@ -24,6 +24,16 @@ namespace jobsite.Services
         {
             return base.GetAll();
         }
+
+        public override IEnumerable<Department> GetAllIEnumerable()
+        {
+            return base.GetAllIEnumerable();
+        }
+
+        public override Task<List<Department>> GetAllAsync()
+        {
+            return base.GetAllAsync();
+        }
     }
 
 

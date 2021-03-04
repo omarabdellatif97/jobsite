@@ -24,6 +24,16 @@ namespace jobsite.Services
         {
             return base.GetAll();
         }
+
+        public override IEnumerable<Admin> GetAllIEnumerable()
+        {
+            return base.GetAllIEnumerable();
+        }
+
+        public override Task<List<Admin>> GetAllAsync()
+        {
+            return base.GetAllAsync();
+        }
     }
 
 

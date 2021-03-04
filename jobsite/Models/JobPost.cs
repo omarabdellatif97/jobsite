@@ -43,11 +43,11 @@ namespace jobsite.Models
             set;
         }
 
-        [NotMapped]
-        public List<string> KeywordsList
-        {
-            get => KeywordsText.Split(new[] { "#" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-        }
+        //[NotMapped]
+        //public List<string> KeywordsList
+        //{
+        //    get => KeywordsText?.Trim().Length < 1? new List<string>():KeywordsText.Split(new[] { "#" }, StringSplitOptions.RemoveEmptyEntries)?.ToList()??new List<string>();
+        //}
 
         public int? DeptId { get; set; }
 

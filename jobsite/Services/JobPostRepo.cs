@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace jobsite.Services
@@ -51,6 +52,20 @@ namespace jobsite.Services
                 .Include(j => j.Department).ToList();
         }
 
+        public override IEnumerable<JobPost> GetAllIEnumerable()
+        {
+            return context.JobPosts
+                .Include(j => j.Department);
+        }
+
+        public override Task<List<JobPost>> GetAllAsync()
+        {
+            return context.JobPosts
+                .Include(j => j.Department).ToListAsync();
+        }
+
+        
+
         public override void Remove(JobPost entity)
         {
             //this.context.Keywords.RemoveRange(this.context.Keywords.Where(k => k.JobPostId==entity.Id ));
@@ -65,8 +80,61 @@ namespace jobsite.Services
 
         public override void Update(JobPost entity)
         {
+            var post = Get(entity.Id);
+            post.KeywordsText = entity.KeywordsText;
+            post.Location = entity.Location;
+            post.Title = entity.Title;
+            post.Status = entity.Status;
+            post.DeptId = entity.DeptId;
 
-            base.Update(entity);
+            context.JobPosts.Update(post);
+        }
+
+        public void closeJobPost(JobPost entity)
+        {
+            var post = Get(entity.Id);
+            post.Status = JobPostStatus.Closed;
+            context.JobPosts.Update(post);
+        }
+
+        public override JobPost Get(Expression<Func<JobPost, bool>> predicate)
+        {
+            //return base.Get(predicate);
+            return context.JobPosts
+                .Include(j => j.Department)
+                .FirstOrDefault(predicate);
+        }
+
+        public override Task<JobPost> GetAsync(Expression<Func<JobPost, bool>> predicate)
+        {
+            //return base.GetAsync(predicate);
+            return context.JobPosts
+                    .Include(j => j.Department)
+                    .FirstOrDefaultAsync(predicate);
+        }
+
+        public override Task<JobPost> GetAsync(int id)
+        {
+            //return base.GetAsync(id);
+            return context.JobPosts.Include(j => j.Department).FirstOrDefaultAsync(j => j.Id == id);
+        }
+
+        public override IEnumerable<JobPost> GetAll(Expression<Func<JobPost, bool>> predicate)
+        {
+            //return base.GetAll(predicate);
+            return GetAllIEnumerable(predicate).ToList();
+        }
+
+        public override IEnumerable<JobPost> GetAllIEnumerable(Expression<Func<JobPost, bool>> predicate)
+        {
+            //return base.GetAllIEnumerable(predicate);
+            return context.JobPosts.Include(j => j.Department).Where(predicate);
+        }
+
+        public override Task<List<JobPost>> GetAllAsync(Expression<Func<JobPost, bool>> predicate)
+        {
+            //return base.GetAllAsync(predicate);
+            return context.JobPosts.Include(j => j.Department).Where(predicate).ToListAsync();
         }
     }
 

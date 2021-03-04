@@ -30,7 +30,15 @@ namespace jobsite.Services
     {
         //IEnumerable<TEntity> Search(string value);
         TEntity Get(int id);
+        Task<TEntity> GetAsync(int id);
+        TEntity Get(Expression<Func<TEntity, bool>> predicate);
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
         IEnumerable<TEntity> GetAll();
+        IEnumerable<TEntity> GetAllIEnumerable();
+        Task<List<TEntity>> GetAllAsync();
+        IEnumerable<TEntity> GetAll(Expression<Func<TEntity,bool>>predicate);
+        IEnumerable<TEntity> GetAllIEnumerable(Expression<Func<TEntity, bool>> predicate);
+        Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate);
         //IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
         //TEntity SingleOrDefault(Expression<Func<TEntity, bool>> predicate);
         void Add(TEntity entity);

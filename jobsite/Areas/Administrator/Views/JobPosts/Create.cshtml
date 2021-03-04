@@ -1,4 +1,7 @@
 ﻿@model jobsite.Models.JobPost
+@{ 
+    var dept = (SelectList)ViewData["DeptId"];
+}
 
 <h4>Create Job Post</h4>
 <hr />
@@ -21,11 +24,11 @@
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            @*<div class="form-group">
                 <label asp-for="PostDate" class="control-label"></label>
                 <input asp-for="PostDate" class="form-control" />
                 <span asp-validation-for="PostDate" class="text-danger"></span>
-            </div>
+            </div>*@
             @*<div class="form-group">
             <label asp-for="Status" class="control-label"></label>
             <select asp-for="Status" asp-items="Html.GetEnumSelectList<JobPostStatus>()" class="form-control"></select>
@@ -33,7 +36,7 @@
         </div>*@
             <div class="form-group">
                 <label asp-for="DeptId" class="control-label"></label>
-                <select asp-for="DeptId" class="form-control" asp-items="ViewBag.DeptId"></select>
+                <select asp-for="DeptId" class="form-control" asp-items="dept"></select>
             </div>
             <div class="form-group">
                 <label class="control-label">Keywords</label>
