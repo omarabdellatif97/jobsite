@@ -26,11 +26,13 @@ namespace jobsite
             Configuration = configuration;
         }
 
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews(
                 options => {
                     options.Filters.Add(typeof(IdentityContorllerFilter));
@@ -76,6 +78,11 @@ namespace jobsite
 
             services.AddSingleton<IAuthorizationHandler, AdminHandler>();
             services.AddSingleton<IAuthorizationHandler, CandidateHandler>();
+
+
+            var sp = services.BuildServiceProvider();
+            var _userManager = sp.GetService<UserManager<ApplicationUser>>();
+            InitAdmin.SeedUsers(_userManager, Configuration["DefaultUserNameInfo:Email"], Configuration["DefaultUserNameInfo:Password"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

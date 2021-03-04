@@ -11,46 +11,53 @@
 
 
 <div class="row">
-    <div class="col-md-7">
+    <div class="col-12">
         <form id="profile-form" method="post">
-
-
             <div id="educations">
                 @for (int i = 0; i < Model.Input.ToList().Count; i++)
                 {
                     <div id="@("edu" + i)" style="background-color:beige; margin-bottom:3rem;">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="Input.ToList()[i].Id" />
+                        <input class="inp0" type="hidden" asp-for="Input.ToList()[i].Id" />
                         <div class="form-group f0">
                             <label asp-for="Input.ToList()[i].School" class="control-label"></label>
                             <input asp-for="Input.ToList()[i].School" class="form-control" />
                             <span asp-validation-for="Input.ToList()[i].School" class="text-danger"></span>
                         </div>
-                        <div class="form-group f1">
-                            <label asp-for="Input.ToList()[i].Degree" class="control-label"></label>
-                            <input asp-for="Input.ToList()[i].Degree" class="form-control" />
-                            <span asp-validation-for="Input.ToList()[i].Degree" class="text-danger"></span>
+                        <div class="row">
+                            <div class="form-group f1 col-6">
+                                <label asp-for="Input.ToList()[i].Degree" class="control-label"></label>
+                                <input asp-for="Input.ToList()[i].Degree" class="form-control" />
+                                <span asp-validation-for="Input.ToList()[i].Degree" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f5 col-6">
+                                <label asp-for="Input.ToList()[i].Grade" class="control-label"></label>
+                                <input asp-for="Input.ToList()[i].Grade" class="form-control" />
+                                <span asp-validation-for="Input.ToList()[i].Grade" class="text-danger"></span>
+                            </div>
                         </div>
+
+
                         <div class="form-group f2">
                             <label asp-for="Input.ToList()[i].FieldOfStudy" class="control-label"></label>
                             <input asp-for="Input.ToList()[i].FieldOfStudy" class="form-control" />
                             <span asp-validation-for="Input.ToList()[i].FieldOfStudy" class="text-danger"></span>
                         </div>
-                        <div class="form-group f3">
-                            <label asp-for="Input.ToList()[i].StartDate" class="control-label"></label>
-                            <input asp-for="Input.ToList()[i].StartDate" class="form-control" />
-                            <span asp-validation-for="Input.ToList()[i].StartDate" class="text-danger"></span>
+
+
+                        <div class="row">
+                            <div class="form-group f3 col-6">
+                                <label asp-for="Input.ToList()[i].StartDate" class="control-label"></label>
+                                <input asp-for="Input.ToList()[i].StartDate" class="form-control" />
+                                <span asp-validation-for="Input.ToList()[i].StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group f4 col-6">
+                                <label asp-for="Input.ToList()[i].EndDate" class="control-label"></label>
+                                <input asp-for="Input.ToList()[i].EndDate" class="form-control" />
+                                <span asp-validation-for="Input.ToList()[i].EndDate" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="form-group f4">
-                            <label asp-for="Input.ToList()[i].EndDate" class="control-label"></label>
-                            <input asp-for="Input.ToList()[i].EndDate" class="form-control" />
-                            <span asp-validation-for="Input.ToList()[i].EndDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group f5">
-                            <label asp-for="Input.ToList()[i].Grade" class="control-label"></label>
-                            <input asp-for="Input.ToList()[i].Grade" class="form-control" />
-                            <span asp-validation-for="Input.ToList()[i].Grade" class="text-danger"></span>
-                        </div>
+
                         <div class="form-group f6">
                             <label asp-for="Input.ToList()[i].Description" class="control-label"></label>
                             <input asp-for="Input.ToList()[i].Description" class="form-control" />
@@ -108,87 +115,68 @@
             <button type="button" class="btn btn-primary remove-edu offset-4 col-4">Remove Education</button>
         </div>
     </div>
-
-    <div class="col-4">
-        <form enctype="multipart/form-data" method="post">
-            <dl>
-                <dt>
-                    <label asp-for="FormFile"></label>
-                </dt>
-                <dd>
-                    <input asp-for="FormFile" type="file">
-                    <span asp-validation-for="FormFile"></span>
-                </dd>
-            </dl>
-            <input asp-page-handler="Upload" class="btn btn-danger" type="submit" value="Upload" />
-            <br />
-            @if (Model.CV != null)
-            {
-                <a asp-route-handler="Download">@Model.CV</a>
-            }
-            
-        </form>
-    </div>
-
-
-    <script>
-        console.log("check");
-        var educDiv = document.getElementById("educations");
-        var fields = ["School", "Degree", "FieldOfStudy", "StartDate", "EndDate", "Grade", "Description"];
-        var modelName = "Input";
-        var listName = "Educations";
-        var tempNode = document.getElementById("dummy");
-        tempNode.removeAttribute('id');
-        function createId(field, id) {
-            //var str = `${modelName}[${id}].${fields[field]}`;
-            var str = `[${id}].${fields[field]}`;
-            return str;
-        }
-
-        function setId(obj, id) {
-            obj.setAttribute("id", `edu${id}`);
-            //var cnt2 = obj.children.length;
-            var cnt2 = fields.length;
-            for (var i = 0; i < cnt2; i++) {
-                var fieldDiv = obj.getElementsByClassName(`f${i}`)[0];
-                var str = createId(i, id);
-                fieldDiv.children[0].setAttribute("for", str);
-                fieldDiv.children[1].setAttribute("id", str);
-                fieldDiv.children[1].setAttribute("Name", str);
-                fieldDiv.children[2].setAttribute("data-valmsg-for", str);
-            }
-            var rmvBtn = obj.getElementsByClassName(`remove-edu`)[0];
-            rmvBtn.setAttribute('data-btn', id);
-        }
-
-        function deleteEducation(eve) {
-            var obj = eve.srcElement;
-            var cnt = educDiv.querySelectorAll("#educations > div").length;
-            var eduId = obj.getAttribute('data-btn');
-            var eduDiv = document.getElementById(`edu${eduId}`);
-            for (var i = parseInt(eduId) + 1; i < cnt; i++) {
-                setId(document.getElementById(`edu${i}`), i - 1);
-            }
-            eduDiv.remove();
-        }
-
-        function addEducation() {
-            var cnt = educDiv.querySelectorAll("#educations > div").length;
-            var toAdd = tempNode.cloneNode(true);
-            console.log(toAdd);
-            setId(toAdd, cnt);
-            var rmvBtn = toAdd.getElementsByClassName(`remove-edu`)[0];
-            rmvBtn.addEventListener('click', deleteEducation)
-            toAdd.style.display = "block";
-            educDiv.appendChild(toAdd);
-        }
-        var btn = document.getElementById('add-edu');
-        var eduSec = document.getElementById('edu-sec');
-        btn.addEventListener('click', function () {
-            addEducation();
-        });
-    </script>
 </div>
+
+
+<script>
+    console.log("check");
+    var educDiv = document.getElementById("educations");
+    var fields = ["School", "Degree", "Grade", "FieldOfStudy", "StartDate", "EndDate", "Description", "Id"];
+    var modelName = "Input";
+    var listName = "Educations";
+    var tempNode = document.getElementById("dummy");
+    tempNode.removeAttribute('id');
+    function createId(field, id) {
+        var str = `[${id}].${fields[field]}`;
+        return str;
+    }
+
+    function setId(obj, id) {
+        obj.setAttribute("id", `edu${id}`);
+        var cnt2 = fields.length - 1;
+        for (var i = 0; i < cnt2; i++) {
+            var fieldDiv = obj.getElementsByClassName(`f${i}`)[0];
+            var str = createId(i, id);
+            fieldDiv.children[0].setAttribute("for", str);
+            fieldDiv.children[1].setAttribute("id", str);
+            fieldDiv.children[1].setAttribute("Name", str);
+            fieldDiv.children[2].setAttribute("data-valmsg-for", str);
+        }
+        if (obj.getElementsByClassName('inp0').length == 1) {
+            obj.getElementsByClassName('inp0')[0].setAttribute("id", `[${id}].Id`)
+            obj.getElementsByClassName('inp0')[0].setAttribute("name", `[${id}].Id`)
+        }
+        var rmvBtn = obj.getElementsByClassName(`remove-edu`)[0];
+        rmvBtn.setAttribute('data-btn', id);
+    }
+
+    function deleteEducation(eve) {
+        var obj = eve.srcElement;
+        var cnt = educDiv.querySelectorAll("#educations > div").length;
+        var eduId = obj.getAttribute('data-btn');
+        var eduDiv = document.getElementById(`edu${eduId}`);
+        for (var i = parseInt(eduId) + 1; i < cnt; i++) {
+            setId(document.getElementById(`edu${i}`), i - 1);
+        }
+        eduDiv.remove();
+    }
+
+    function addEducation() {
+        var cnt = educDiv.querySelectorAll("#educations > div").length;
+        var toAdd = tempNode.cloneNode(true);
+        console.log(toAdd);
+        setId(toAdd, cnt);
+        var rmvBtn = toAdd.getElementsByClassName(`remove-edu`)[0];
+        rmvBtn.addEventListener('click', deleteEducation)
+        toAdd.style.display = "block";
+        educDiv.appendChild(toAdd);
+    }
+    var btn = document.getElementById('add-edu');
+    var eduSec = document.getElementById('edu-sec');
+    btn.addEventListener('click', function () {
+        addEducation();
+    });
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

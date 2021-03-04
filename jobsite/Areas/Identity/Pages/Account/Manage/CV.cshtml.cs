@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace jobsite.Areas.Identity.Pages.Account.Manage
 {
-    public class EduacationsModel : PageModel
+    public class CVModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public EduacationsModel(
+        public CVModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
@@ -29,15 +29,15 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
         [TempData]
         public string StatusMessage { get; set; }
 
+        [Display(Name = "CV")]
         [BindProperty]
-        public ICollection<Education> Input { get; set; }
+        public IFormFile FormFile { get; set; }
 
+        public string CV { get; set; }
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-
             Username = userName;
-            Input = ((Candidate)user).Educations;            
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -48,10 +48,19 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            if (((Candidate)user).CV != null)
+            {
+                CV = ((Candidate)user).CV.Title;
+                //var stream = new MemoryStream(((Candidate)user).CV.Content);
+                //FormFile = new FormFile(stream, 0, stream.Length, ((Candidate)user).CV.Title, ((Candidate)user).CV.Title);
+            }
+            else
+            {
+                CV = null;
+            }
             await LoadAsync(user);
             return Page();
         }
-
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -61,25 +70,58 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            bool cvUploaded = (FormFile != null);
+
+            byte[] Content = new byte[0];
+
+            if (cvUploaded)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await FormFile.CopyToAsync(memoryStream);
+
+                    if (memoryStream.Length < 2097152 * 4)
+                    {
+
+                        Content = memoryStream.ToArray();
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "The file is too large.");
+                    }
+                }
+            }
+
+
             if (!ModelState.IsValid)
             {
                 await LoadAsync(user);
                 return Page();
             }
 
-            var cnt = ((Candidate)user).Educations.Count;
-            ((Candidate)user).Educations = Input;
-
-            var updt = await _userManager.UpdateAsync(user);
-
-            if (!updt.Succeeded) 
+            if (cvUploaded)
             {
-                StatusMessage = "Unexpected error when trying to update educations.";
-                return RedirectToPage();
-            }
+                CV cv = new CV();
+                cv.Title = FormFile.FileName;
+                cv.Content = Content;
+                cv.Extension = Path.GetExtension(FormFile.FileName);
+                if (cv.Extension.Length > 20)
+                {
+                    cv.Extension = "unknown";
+                }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+                ((Candidate)user).CV = cv;
+                var updt = await _userManager.UpdateAsync(user);
+
+                if (!updt.Succeeded)
+                {
+                    StatusMessage = "Unexpected error when trying to update educations.";
+                    return RedirectToPage();
+                }
+                await _signInManager.RefreshSignInAsync(user);
+                StatusMessage = "Your profile has been updated";
+            }
+            
             return RedirectToPage();
 
         }
@@ -102,8 +144,5 @@ namespace jobsite.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to download CV.");
             }
         }
-
-
-
     }
 }

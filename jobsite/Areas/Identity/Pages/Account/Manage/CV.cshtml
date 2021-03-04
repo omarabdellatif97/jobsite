@@ -1,0 +1,41 @@
+﻿
+
+
+
+@*@page*@
+@page "{handler?}"
+@model CVModel
+@{
+    ViewData["Title"] = "Edit CV";
+    ViewData["ActivePage"] = ManageNavPages.CV;
+}
+
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+
+<div class="row">
+    <div class="col-4">
+        <form enctype="multipart/form-data" method="post">
+            <dl>
+                <dt>
+                    <label asp-for="FormFile"></label>
+                </dt>
+                <dd>
+                    <input asp-for="FormFile" type="file">
+                    <span asp-validation-for="FormFile"></span>
+                </dd>
+            </dl>
+            <input asp-page-handler="Upload" class="btn btn-danger" type="submit" value="Upload" />
+            <br />
+            @if (Model.CV != null)
+            {
+                <span>Current CV: </span><a asp-route-handler="Download">@Model.CV</a>
+            }
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -8,7 +8,8 @@
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
     @if (ViewData["Discriminator"] is string str && str == "Candidate")
     {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.EducationsClass(ViewContext)" id="Educations" asp-page="./Educations">Educations and CV</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.EducationsClass(ViewContext)" id="Educations" asp-page="./Educations">Educations</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.CVClass(ViewContext)" id="Educations" asp-page="./CV">CV</a></li>
     }
 
     @if (ViewData["Discriminator"] is string str2 && str2 == "Admin")

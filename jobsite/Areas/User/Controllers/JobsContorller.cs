@@ -24,8 +24,6 @@ namespace jobsite.Areas.Controllers.User
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-  
-
         public JobsController(JobContext context, UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
@@ -58,111 +56,24 @@ namespace jobsite.Areas.Controllers.User
                 return NotFound();
             }
 
-            return View(jobPost);
-        }
-
-        // GET: Admin/JobPosts/Create
-        public IActionResult Create()
-        {
-            //ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Name");
-            ViewBag.DeptId = new SelectList(_context.Departments, "Id", "Name");
-            return View();
-        }
-
-        // POST: Admin/JobPosts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
-        {
-            if (ModelState.IsValid)
+            if (jobPost.Status == JobPostStatus.Closed)
             {
-                _context.Add(jobPost);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ViewData["Status"] = "Closed";
             }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
-            return View(jobPost);
-        }
-
-        // GET: Admin/JobPosts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            else
             {
-                return NotFound();
-            }
-
-            var jobPost = await _context.JobPosts
-                .Include(j => j.Department)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobPost == null)
-            {
-                return NotFound();
-            }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
-            return View(jobPost);
-        }
-
-        // POST: Admin/JobPosts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Location,PostDate,Status,DeptId,KeywordsText")] JobPost jobPost)
-        {
-            if (id != jobPost.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null && ((Candidate)user).JobApplications.Any(J => J.JobPostId == jobPost.Id))
                 {
-                    //_context.Attach(jobPost);
-                    _context.Entry(jobPost).State = EntityState.Modified;
-                    //_context.Update(jobPost);
-                    await _context.SaveChangesAsync();
+                    ViewData["Status"] = "Already Applied.";
                 }
-                catch (DbUpdateConcurrencyException)
+                else 
                 {
-                    if (!JobPostExists(jobPost.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ViewData["Status"] = "Not Applied";
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["DeptId"] = new SelectList(_context.Departments, "Id", "Description", jobPost.DeptId);
             return View(jobPost);
         }
-
-        // GET: Admin/JobPosts/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var jobPost = await _context.JobPosts
-                .Include(j => j.Department)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobPost == null)
-            {
-                return NotFound();
-            }
-
-            return View(jobPost);
-        }
-
-
 
 
         private async Task LoadAsync(ApplicationUser user, BinderModel binderModel)
@@ -182,9 +93,6 @@ namespace jobsite.Areas.Controllers.User
         }
 
 
-
-
-
         // GET: Admin/JobPosts/Delete/5
         public async Task<IActionResult> Apply(int? id)
         {
@@ -196,7 +104,8 @@ namespace jobsite.Areas.Controllers.User
             var jobPost = await _context.JobPosts
                 .Include(j => j.Department)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (jobPost == null)
+
+            if (jobPost == null || jobPost.Status == JobPostStatus.Closed)
             {
                 return NotFound();
             }
@@ -248,9 +157,7 @@ namespace jobsite.Areas.Controllers.User
         {
             var jobPost = await _context.JobPosts.FindAsync(id);
 
-            var context = this.Request;
-
-            if (jobPost == null)
+            if (jobPost == null || jobPost.Status == JobPostStatus.Closed)
             {
                 return NotFound();
             }
@@ -349,21 +256,5 @@ namespace jobsite.Areas.Controllers.User
             return RedirectToAction(nameof(Details), new { id = jobPost.Id });
         }
 
-
-        // POST: Admin/JobPosts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var jobPost = await _context.JobPosts.FindAsync(id);
-            _context.JobPosts.Remove(jobPost);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool JobPostExists(int id)
-        {
-            return _context.JobPosts.Any(e => e.Id == id);
-        }
     }
 }
