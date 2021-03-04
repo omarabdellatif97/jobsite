@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
 using jobsite.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jobsite.Areas.Administrator.Controllers
 {
     // Edit and Details only here for admin
     [Area("Administrator")]
+    [Authorize("IsAdmin")]
     public class JobApplicationsController : Controller
     {
         private readonly JobContext _context;
@@ -27,7 +29,7 @@ namespace jobsite.Areas.Administrator.Controllers
         {
             //var file = _context.CVs.Find(id);
             var file = await unit.CV.GetAsync(id);
-            return File(file.Content, "application/pdf", $"{file.Title}{file.Extension}");
+            return File(file.Content, "application/pdf", $"{file.Title}");
         }
 
 
