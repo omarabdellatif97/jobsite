@@ -49,7 +49,7 @@ namespace jobsite.Areas.Controllers.Administrator
             //var data = await jobContext.ToListAsync();
             ViewData["jobsearch"] = jobsearch;
             var data = await unit.JobPosts.SearchAsync(jobsearch);
-            return View(data);
+            return View(data.Where(d=> d.Status == JobPostStatus.Opened));
         }
 
         //GET: Admin/JobPosts/Details/5
