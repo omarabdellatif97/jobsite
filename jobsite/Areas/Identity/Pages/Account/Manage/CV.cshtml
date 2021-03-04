@@ -1,8 +1,4 @@
-﻿
-
-
-
-@*@page*@
+﻿@*@page*@
 @page "{handler?}"
 @model CVModel
 @{
@@ -27,13 +23,17 @@
                 </dd>
             </dl>
             <input asp-page-handler="Upload" class="btn btn-danger" type="submit" value="Upload" />
-            <br />
-            @if (Model.CV != null)
-            {
-                <span>Current CV: </span><a asp-route-handler="Download">@Model.CV</a>
-            }
+
         </form>
     </div>
+    @if (Model.CV != null)
+    {
+    <div class="col-4">
+        <p>Current CV: </p>
+        <a asp-route-handler="Download">@Model.CV</a>
+    </div>
+    }
+
 </div>
 
 @section Scripts {
