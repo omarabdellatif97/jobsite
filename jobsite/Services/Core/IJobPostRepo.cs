@@ -1,4 +1,5 @@
 ﻿using jobsite.Models;
+using System.Threading.Tasks;
 
 namespace jobsite.Services
 {
@@ -6,8 +7,6 @@ namespace jobsite.Services
     {
         JobPost GetWithApplications(int id);
         void closeJobPost(JobPost entity);
-
-
     }
 
 

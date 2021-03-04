@@ -36,6 +36,18 @@ namespace jobsite.Services
         {
             return base.GetAllAsync();
         }
+
+        public override Task<List<CV>> SearchAsync(string jobsearch)
+        {
+            return GetAllAsync(j => j.Title.Contains(jobsearch)
+                 );
+        }
+
+        public override IEnumerable<CV> Search(string jobsearch)
+        {
+            return GetAll(j => j.Title.Contains(jobsearch)
+                );
+        }
     }
 
 

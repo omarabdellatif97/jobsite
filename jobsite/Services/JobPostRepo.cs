@@ -136,6 +136,24 @@ namespace jobsite.Services
             //return base.GetAllAsync(predicate);
             return context.JobPosts.Include(j => j.Department).Where(predicate).ToListAsync();
         }
+
+        public override Task<List<JobPost>> SearchAsync(string jobsearch)
+        {
+            return GetAllAsync(j => j.Title.Contains(jobsearch)
+                || j.Description.Contains(jobsearch)
+                || j.Location.Contains(jobsearch)
+                || j.KeywordsText.Contains(jobsearch)
+                );
+        }
+
+        public override IEnumerable<JobPost> Search(string jobsearch)
+        {
+            return GetAll(j => j.Title.Contains(jobsearch)
+                || j.Description.Contains(jobsearch)
+                || j.Location.Contains(jobsearch)
+                || j.KeywordsText.Contains(jobsearch)
+                );
+        }
     }
 
 

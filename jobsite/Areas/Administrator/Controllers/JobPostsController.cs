@@ -34,6 +34,24 @@ namespace jobsite.Areas.Controllers.Administrator
             return View(data);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Search(string jobsearch)
+        {
+            var search = jobsearch;
+            return RedirectToAction(nameof(SearchResult),new { jobsearch=search });
+        }
+
+
+        public async Task<IActionResult> SearchResult(string jobsearch)
+        {
+            //var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
+            //var data = await jobContext.ToListAsync();
+            ViewData["jobsearch"] = jobsearch;
+            var data = await unit.JobPosts.SearchAsync(jobsearch);
+            return View(data);
+        }
+
         //GET: Admin/JobPosts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
