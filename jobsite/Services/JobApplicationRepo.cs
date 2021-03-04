@@ -111,8 +111,17 @@ namespace jobsite.Services
                 .Include(j => j.Candidate).Where(predicate).ToListAsync();
         }
 
+        public override Task<List<JobApplication>> SearchAsync(string jobsearch)
+        {
+            return GetAllAsync(j => j.Candidate.Name.Contains(jobsearch));
+        }
 
+        public override IEnumerable<JobApplication> Search(string jobsearch)
+        {
+            return GetAll(j => j.Candidate.Name.Contains(jobsearch));
+        }
 
+        
     }
 
 

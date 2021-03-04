@@ -97,6 +97,23 @@ namespace jobsite.Services
             return context.Candidates.Include(j => j.Educations ).Where(predicate).ToListAsync();
         }
 
+        public override Task<List<Candidate>> SearchAsync(string jobsearch)
+        {
+            return GetAllAsync(j => j.Name.Contains(jobsearch)
+                || j.Address.Contains(jobsearch)
+                || j.Email.Contains(jobsearch)
+                || j.PhoneNumber.Contains(jobsearch)
+                );
+        }
+
+        public override IEnumerable<Candidate> Search(string jobsearch)
+        {
+            return GetAll(j => j.Name.Contains(jobsearch)
+                || j.Address.Contains(jobsearch)
+                || j.Email.Contains(jobsearch)
+                || j.PhoneNumber.Contains(jobsearch)
+                );
+        }
     }
 
 

@@ -5,9 +5,10 @@
     var depts = (SelectList)ViewData["DeptId"];
 }
 
+
 <h1>Edit</h1>
 
-<h4>JobPost</h4>
+<h4>Job Post</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,11 +20,7 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>
                 <input asp-for="Location" class="form-control" />
@@ -34,10 +31,10 @@
                 <label class="control-label">@Model.PostDate</label>
             </div>
             @*<div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status"  class="form-control"></select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>*@
+            <label asp-for="Status" class="control-label"></label>
+            <select asp-for="Status"  class="form-control"></select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="DeptId" class="control-label"></label>
                 <select asp-for="DeptId" class="form-control" asp-items="depts"></select>
@@ -45,7 +42,12 @@
             </div>
             <div class="form-group">
                 <label class="control-label">Keywords</label>
-                <textarea asp-for="KeywordsText" class="form-control h-auto"></textarea>
+                <textarea style="height:10rem;resize:none" asp-for="KeywordsText" class="form-control txtarea"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea style="height:15rem;resize:none" asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

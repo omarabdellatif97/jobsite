@@ -31,6 +31,8 @@ namespace jobsite.Services
         //IEnumerable<TEntity> Search(string value);
         TEntity Get(int id);
         Task<TEntity> GetAsync(int id);
+        Task<List<TEntity>> SearchAsync(string jobsearch);
+        IEnumerable<TEntity> Search(string jobsearch);
         TEntity Get(Expression<Func<TEntity, bool>> predicate);
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate);
         IEnumerable<TEntity> GetAll();

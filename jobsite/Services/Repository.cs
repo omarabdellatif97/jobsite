@@ -150,6 +150,7 @@ namespace jobsite.Services
             GC.SuppressFinalize(this);
         }
 
-  
+        public abstract Task<List<TEntity>> SearchAsync(string jobsearch);
+        public abstract IEnumerable<TEntity> Search(string jobsearch);
     }
 }

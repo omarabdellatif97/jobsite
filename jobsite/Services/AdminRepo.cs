@@ -34,6 +34,24 @@ namespace jobsite.Services
         {
             return base.GetAllAsync();
         }
+
+        public override Task<List<Admin>> SearchAsync(string jobsearch)
+        {
+            return GetAllAsync(j => j.Name.Contains(jobsearch)
+                || j.Address.Contains(jobsearch)
+                || j.Email.Contains(jobsearch)
+                || j.PhoneNumber.Contains(jobsearch)
+                );
+        }
+
+        public override IEnumerable<Admin> Search(string jobsearch)
+        {
+            return GetAll(j => j.Name.Contains(jobsearch)
+                || j.Address.Contains(jobsearch)
+                || j.Email.Contains(jobsearch)
+                || j.PhoneNumber.Contains(jobsearch)
+                );
+        }
     }
 
 
