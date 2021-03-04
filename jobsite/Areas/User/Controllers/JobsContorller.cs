@@ -36,6 +36,7 @@ namespace jobsite.Areas.Controllers.User
         }
 
         // GET: Admin/JobPosts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
@@ -45,13 +46,14 @@ namespace jobsite.Areas.Controllers.User
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public IActionResult Search(string jobsearch)
         {
             var search = jobsearch;
             return RedirectToAction(nameof(SearchResult), new { jobsearch = search });
         }
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> SearchResult(string jobsearch)
         {
             //var jobContext = _context.JobPosts.Include(j => j.Department).Include(j => j.Applications);
@@ -64,6 +66,7 @@ namespace jobsite.Areas.Controllers.User
 
 
         // GET: Admin/JobPosts/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -91,9 +94,13 @@ namespace jobsite.Areas.Controllers.User
                 {
                     ViewData["Status"] = "Already Applied.";
                 }
-                else 
+                else if (user == null)
                 {
-                    ViewData["Status"] = "Not Applied";
+                    ViewData["Status"] = "NotLogged";
+                }
+                else
+                {
+                    ViewData["Status"] = "NotApplied";
                 }
             }
             return View(jobPost);

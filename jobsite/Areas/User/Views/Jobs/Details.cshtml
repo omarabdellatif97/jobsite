@@ -62,9 +62,13 @@
     {
         <a class="btn btn-primary" disabled>@str3</a>
     }
-    else
+    else if (ViewData["Status"] is string str4 && str4 == "NotApplied")
     {
         <a class="btn btn-primary" asp-action="Apply" asp-route-id="@Model.Id">Apply</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" disabled>Login TO Apply</a>
     }
     <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
