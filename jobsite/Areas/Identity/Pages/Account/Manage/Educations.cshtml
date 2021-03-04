@@ -72,17 +72,27 @@
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
         <div id="dummy" style="display: none; background-color:beige; margin-bottom:3rem;">
+
             <div class="form-group f0">
                 <label class="control-label">School</label>
                 <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" data-val-required="The School field is required." maxlength="80" value="">
                 <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
             </div>
 
-            <div class="form-group f1">
-                <label class="control-label">Degree</label>
-                <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
-                <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+
+            <div class="row">
+                <div class="form-group f1 col-6">
+                    <label class="control-label">Degree</label>
+                    <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
+                    <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group f5 col-6">
+                    <label class="control-label">Grade</label>
+                    <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
+                    <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+                </div>
             </div>
+
 
             <div class="form-group f2">
                 <label class="control-label">FieldOfStudy</label>
@@ -90,23 +100,20 @@
                 <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
             </div>
 
-            <div class="form-group f3" style="display:inline-block">
-                <label class="control-label">StartDate</label>
-                <input class="form-control" type="date" data-val="true" data-val-required="The StartDate field is required." value="">
-                <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+
+            <div class="row">
+                <div class="form-group f3 col-6">
+                    <label class="control-label">StartDate</label>
+                    <input class="form-control" type="date" data-val="true" data-val-required="The StartDate field is required." value="">
+                    <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+                </div>
+                <div class="form-group f4 col-6">
+                    <label class="control-label">EndDate</label>
+                    <input class="form-control" type="date" data-val="true" data-val-required="The EndDate field is required." value="">
+                    <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
+                </div>
             </div>
 
-            <div class="form-group f4" style="display:inline-block">
-                <label class="control-label">EndDate</label>
-                <input class="form-control" type="date" data-val="true" data-val-required="The EndDate field is required." value="">
-                <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
-            </div>
-
-            <div class="form-group f5">
-                <label class="control-label">Grade</label>
-                <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 80 character" data-val-maxlength-max="80" maxlength="80" value="">
-                <span class="text-danger field-validation-valid" data-valmsg-replace="true"></span>
-            </div>
             <div class="form-group f6">
                 <label class="control-label">Description</label>
                 <input class="form-control" type="text" data-val="true" data-val-maxlength="max length is 255 character" data-val-maxlength-max="255" maxlength="255" value="">
@@ -121,7 +128,8 @@
 <script>
     console.log("check");
     var educDiv = document.getElementById("educations");
-    var fields = ["School", "Degree", "Grade", "FieldOfStudy", "StartDate", "EndDate", "Description", "Id"];
+    
+    var fields = ["School", "Degree", "FieldOfStudy", "StartDate", "EndDate", "Grade", "Description", "Id"];
     var modelName = "Input";
     var listName = "Educations";
     var tempNode = document.getElementById("dummy");
