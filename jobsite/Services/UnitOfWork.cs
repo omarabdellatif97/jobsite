@@ -89,15 +89,15 @@ namespace jobsite.Services
 
         public void Save()
         {
-            context.ChangeTracker.DetectChanges();
-            Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
+            //context.ChangeTracker.DetectChanges();
+            //Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
             this.context.SaveChanges();
         }
 
         public Task<int> SaveAsync()
         {
-            context.ChangeTracker.DetectChanges();
-            Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
+            //context.ChangeTracker.DetectChanges();
+            //Debug.WriteLine(context.ChangeTracker.DebugView.LongView);
             return context.SaveChangesAsync();
         }
 
