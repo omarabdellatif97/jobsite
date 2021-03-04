@@ -85,6 +85,7 @@ namespace jobsite.Services
             post.Location = entity.Location;
             post.Title = entity.Title;
             post.Status = entity.Status;
+            post.Description = entity.Description;
             post.DeptId = entity.DeptId;
 
             context.JobPosts.Update(post);
