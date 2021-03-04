@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using jobsite.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jobsite.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
+    [Authorize("IsAdmin")]
     public class DepartmentsController : Controller
     {
         private readonly JobContext _context;
