@@ -6,14 +6,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using jobsite.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace jobsite.Models
 {
-    public class JobContext: IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    public class JobContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public JobContext(DbContextOptions dbContextOptions) : base(dbContextOptions) 
+        public IConfiguration Configuration { get; }
+        public JobContext(DbContextOptions dbContextOptions, IConfiguration configuration) : base(dbContextOptions)
         {
-                
+            Configuration = configuration;
         }
 
         public DbSet<Candidate> Candidates { get; set; }
@@ -26,14 +28,34 @@ namespace jobsite.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ApplicationUser>()
                 .HasDiscriminator(u => u.Discriminator);
 
             modelBuilder.Entity<JobApplication>()
                 .Property(a => a.AppDate)
-                .HasDefaultValueSql("getdate()");
+                .HasDefaultValue(DateTime.Now);
 
-            base.OnModelCreating(modelBuilder);
+
+            var hasher = new PasswordHasher<ApplicationUser>();
+            var user = new Admin
+            {
+                Id = -1,
+                UserName = Configuration["DefaultUserNameInfo:Email"],
+                Email = Configuration["DefaultUserNameInfo:Email"],
+                NormalizedEmail = Configuration["DefaultUserNameInfo:Email"].ToUpper(),
+                NormalizedUserName = Configuration["DefaultUserNameInfo:Email"].ToUpper(),
+                SecurityStamp = Guid.NewGuid().ToString("N").ToUpper(),
+                Address = "",
+                BirthDate = DateTime.Now,
+                Gender = Gender.Male,
+                Name = "Admin",
+                PasswordHash = hasher.HashPassword(null, Configuration["DefaultUserNameInfo:Password"]),
+                EmailConfirmed = true
+            };
+
+            modelBuilder.Entity<Admin>().HasData(user);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

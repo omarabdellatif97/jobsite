@@ -39,7 +39,28 @@ namespace jobsite
                     options.Filters.Add(typeof(IdentityPageFilter));
                     }
                 );
-            services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
+            //services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
+
+
+
+            string connectionString = null;
+            string envVar = Environment.GetEnvironmentVariable("DATABASE_URL");
+            if (string.IsNullOrEmpty(envVar))
+            {
+                envVar = Configuration.GetConnectionString("JobConn2");
+            }
+
+            var databaseUri = new Uri(envVar);
+
+            string db = databaseUri.LocalPath.TrimStart('/');
+            string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+
+            connectionString = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
+            
+            services.AddDbContext<JobContext>(options => options.UseNpgsql(connectionString));
+
+
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<JobContext>()
@@ -78,11 +99,6 @@ namespace jobsite
 
             services.AddSingleton<IAuthorizationHandler, AdminHandler>();
             services.AddSingleton<IAuthorizationHandler, CandidateHandler>();
-
-
-            var sp = services.BuildServiceProvider();
-            var _userManager = sp.GetService<UserManager<ApplicationUser>>();
-            InitAdmin.SeedUsers(_userManager, Configuration["DefaultUserNameInfo:Email"], Configuration["DefaultUserNameInfo:Password"]);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
