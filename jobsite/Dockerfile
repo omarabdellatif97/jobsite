@@ -18,4 +18,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 #ENTRYPOINT ["dotnet", "jobsite.dll"]
-CMD ASPNETCORE_URLS=http://*:$PORT dotnet jobsite.dll
+CMD ASPNETCORE_URLS=http://*:$PORT ASPNETCORE_HTTPS_PORT=443 dotnet jobsite.dll

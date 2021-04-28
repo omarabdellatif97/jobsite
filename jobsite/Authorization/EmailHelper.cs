@@ -32,11 +32,12 @@ namespace jobsite.Authorization
         // Use our configuration to send the email by using SmtpClient
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(host, port)
-            {
-                Credentials = new NetworkCredential(userName, password),
-                EnableSsl = enableSSL
-            };
+
+            var client = new SmtpClient(host, port);
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(userName, password);
+            client.EnableSsl = enableSSL;
+
             return client.SendMailAsync(
                 new MailMessage(userName, email, subject, htmlMessage) { IsBodyHtml = true }
             );
