@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace jobsite.Migrations
 {
@@ -12,11 +11,11 @@ namespace jobsite.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -27,11 +26,11 @@ namespace jobsite.Migrations
                 name: "CV",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    Content = table.Column<byte[]>(type: "bytea", maxLength: 8388608, nullable: false),
-                    Extension = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Content = table.Column<byte[]>(type: "varbinary(max)", maxLength: 8388608, nullable: false),
+                    Extension = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -42,10 +41,10 @@ namespace jobsite.Migrations
                 name: "Department",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,11 +55,11 @@ namespace jobsite.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<int>(type: "integer", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,28 +76,28 @@ namespace jobsite.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Gender = table.Column<int>(type: "integer", nullable: false),
-                    Address = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    Discriminator = table.Column<string>(type: "text", nullable: false),
-                    CVId = table.Column<int>(type: "integer", nullable: true),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CVId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,15 +114,15 @@ namespace jobsite.Migrations
                 name: "JobPost",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    Description = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: false),
-                    Location = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    PostDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    KeywordsText = table.Column<string>(type: "character varying(400)", maxLength: 400, nullable: true),
-                    DeptId = table.Column<int>(type: "integer", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    PostDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    KeywordsText = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    DeptId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -140,11 +139,11 @@ namespace jobsite.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,10 +160,10 @@ namespace jobsite.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    ProviderKey = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderKey = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -181,8 +180,8 @@ namespace jobsite.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    RoleId = table.Column<int>(type: "integer", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,10 +204,10 @@ namespace jobsite.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    LoginProvider = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    LoginProvider = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -225,16 +224,16 @@ namespace jobsite.Migrations
                 name: "Education",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    School = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: false),
-                    Degree = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: true),
-                    FieldOfStudy = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: true),
-                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Grade = table.Column<string>(type: "character varying(80)", maxLength: 80, nullable: true),
-                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    CandidateId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    School = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Degree = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    FieldOfStudy = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Grade = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    CandidateId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -251,14 +250,14 @@ namespace jobsite.Migrations
                 name: "JobApplication",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    AppDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValue: new DateTime(2021, 3, 14, 17, 16, 53, 95, DateTimeKind.Local).AddTicks(9479)),
-                    PrefDateToJoin = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    AppStatus = table.Column<int>(type: "integer", nullable: false),
-                    JobPostId = table.Column<int>(type: "integer", nullable: false),
-                    CandidateId = table.Column<int>(type: "integer", nullable: false),
-                    CVId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AppDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 5, 10, 10, 33, 42, 199, DateTimeKind.Local).AddTicks(5375)),
+                    PrefDateToJoin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppStatus = table.Column<int>(type: "int", nullable: false),
+                    JobPostId = table.Column<int>(type: "int", nullable: false),
+                    CandidateId = table.Column<int>(type: "int", nullable: false),
+                    CVId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -286,7 +285,7 @@ namespace jobsite.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "BirthDate", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Gender", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { -1, 0, "", new DateTime(2021, 3, 14, 17, 16, 53, 106, DateTimeKind.Local).AddTicks(5462), "2d7e871e-192a-4d19-bbed-4d832846a23b", "Admin", "companyxyz37@gmail.com", true, 0, false, null, "Admin", "COMPANYXYZ37@GMAIL.COM", "COMPANYXYZ37@GMAIL.COM", "AQAAAAEAACcQAAAAEIW+CRlK0uzZM4SWdg8ow8z8ee5rOimnstYFJ9gKcysK/f6DAcBKOLfunqsYvmmfEQ==", null, false, "5D1CAEF2B6C64F03A9D522879E3964AB", false, "companyxyz37@gmail.com" });
+                values: new object[] { -1, 0, "", new DateTime(2021, 5, 10, 10, 33, 42, 206, DateTimeKind.Local).AddTicks(6558), "651c4173-c87a-4832-a69f-498f0073818c", "Admin", "companyxyz37@gmail.com", true, 0, false, null, "Admin", "COMPANYXYZ37@GMAIL.COM", "COMPANYXYZ37@GMAIL.COM", "AQAAAAEAACcQAAAAEGxlYF9wOPcInoX5rZRVhvzA/glZpFV8/Cw8UjEToYFDqEaOnOVDGNIpGRBJNeskIQ==", null, false, "62CE6FDEDEB54A5DAF43AA1223DB5D07", false, "companyxyz37@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -297,7 +296,8 @@ namespace jobsite.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -323,13 +323,15 @@ namespace jobsite.Migrations
                 name: "IX_AspNetUsers_CVId",
                 table: "AspNetUsers",
                 column: "CVId",
-                unique: true);
+                unique: true,
+                filter: "[CVId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Education_CandidateId",

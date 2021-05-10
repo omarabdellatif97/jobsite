@@ -34,32 +34,13 @@ namespace jobsite
         {
 
             services.AddControllersWithViews(
-                options => {
+                options =>
+                {
                     options.Filters.Add(typeof(IdentityContorllerFilter));
                     options.Filters.Add(typeof(IdentityPageFilter));
-                    }
+                }
                 );
-            //services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
-
-
-
-            string connectionString = null;
-            string envVar = Environment.GetEnvironmentVariable("DATABASE_URL");
-            if (string.IsNullOrEmpty(envVar))
-            {
-                envVar = Configuration.GetConnectionString("JobConn2");
-            }
-
-            var databaseUri = new Uri(envVar);
-
-            string db = databaseUri.LocalPath.TrimStart('/');
-            string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
-
-            connectionString = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
-            
-            services.AddDbContext<JobContext>(options => options.UseNpgsql(connectionString));
-
-
+            services.AddDbContext<JobContext>(options => options.UseSqlServer(Configuration.GetConnectionString("JobConn")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -121,7 +102,7 @@ namespace jobsite
 
             //app.Use(async (context, next) =>
             //{
-                
+
             //    await next.Invoke();
             //    // Do logging or other work that doesn't write to the Response.
             //});
@@ -130,15 +111,10 @@ namespace jobsite
 
             app.UseAuthorization();
 
-            
+
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.Map("/Identity/Account/Manage/DownloadPersonalData", (context) => {
-                //    context.Response.StatusCode = 404;
-                //    return Task.CompletedTask;
-                //});
-
                 endpoints.MapControllerRoute(
                     name: "MyArea",
                     pattern: "{area:exists}/{controller}/{action=Index}/{id?}");
@@ -146,7 +122,7 @@ namespace jobsite
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                
+
                 endpoints.MapRazorPages();
             });
         }
